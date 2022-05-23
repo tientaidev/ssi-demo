@@ -1,7 +1,7 @@
 import './topbar.css'
 import SettingsIcon from '@mui/icons-material/Settings';
 
-export function TopBar() {
+export function Topbar() {
   return (
     <div className="topbar">
       <div className="topbarWrapper">
