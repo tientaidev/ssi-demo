@@ -13,7 +13,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { customerApi } from '../../../__fake-api__/customer-api';
+import { identifierApi } from '../../../__fake-api__/did-api';
 import { AuthGuard } from '../../../components/authentication/auth-guard';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
 import { DIDListTable } from '../../../components/dashboard/did/did-list-table';
@@ -73,7 +73,7 @@ const DIDList: NextPage = () => {
 
   const getIdentifiers = useCallback(async () => {
     try {
-      const data = await customerApi.getIdentifiers();
+      const data = await identifierApi.getIdentifiers();
 
       if (isMounted()) {
         setIdentifiers(data);
