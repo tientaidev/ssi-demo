@@ -7,12 +7,8 @@ import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'react-i18next';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import type { Theme } from '@mui/material';
-import { Selector as SelectorIcon } from '../../icons/selector';
-import { ShoppingBag as ShoppingBagIcon } from '../../icons/shopping-bag';
-import { Logo } from '../logo';
 import { Scrollbar } from '../scrollbar';
 import { DashboardSidebarSection } from './dashboard-sidebar-section';
-import { OrganizationPopover } from './organization-popover';
 import { NumbersOutlined, Key, VerifiedUser } from '@mui/icons-material'
 
 interface DashboardSidebarProps {
@@ -38,8 +34,13 @@ const getSections = (t: TFunction): Section[] => [
     title: t('Management'),
     items: [
       {
-        title: 'Decentralized Identifiers',
+        title: 'Customers',
         path: '/dashboard/customers',
+        icon: <NumbersOutlined fontSize="small" />,
+      },
+      {
+        title: 'Decentralized Identifiers',
+        path: '/dashboard/dids',
         icon: <NumbersOutlined fontSize="small" />,
       },
       {
@@ -67,8 +68,6 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
     }
   );
   const sections = useMemo(() => getSections(t), [t]);
-  const organizationsRef = useRef<HTMLButtonElement | null>(null);
-  const [openOrganizationsPopover, setOpenOrganizationsPopover] = useState<boolean>(false);
 
   const handlePathChange = () => {
     if (!router.isReady) {
@@ -85,14 +84,6 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.isReady, router.asPath]
   );
-
-  const handleOpenOrganizationsPopover = (): void => {
-    setOpenOrganizationsPopover(true);
-  };
-
-  const handleCloseOrganizationsPopover = (): void => {
-    setOpenOrganizationsPopover(false);
-  };
 
   const content = (
     <>
@@ -155,11 +146,6 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
           </Box>
         </Box>
       </Scrollbar>
-      <OrganizationPopover
-        anchorEl={organizationsRef.current}
-        onClose={handleCloseOrganizationsPopover}
-        open={openOrganizationsPopover}
-      />
     </>
   );
 
