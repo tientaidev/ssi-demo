@@ -76,7 +76,7 @@ export const DidKeysSummary: FC<DidKeysSummaryProps> = (props) => {
                 {key.kms}
               </TableCell>
               <TableCell>
-                <SeverityPill color={key.kid === props.controllerKeyId ? 'success' : 'error'}>
+                <SeverityPill color={key.kid === props.controllerKeyId ? 'warning' : 'info'}>
                     {key.kid === props.controllerKeyId ? 'Controller' : 'Delegate'}
                 </SeverityPill>
               </TableCell>
