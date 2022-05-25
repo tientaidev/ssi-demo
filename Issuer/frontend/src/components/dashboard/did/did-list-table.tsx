@@ -19,6 +19,7 @@ import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { PencilAlt as PencilAltIcon } from '../../../icons/pencil-alt';
 import { Scrollbar } from '../../scrollbar';
 import type { IIdentifier } from '@veramo/core';
+import { truncate } from '../../../utils/truncate'
 
 interface DIDListTableProps {
   identifiers: IIdentifier[];
@@ -41,12 +42,7 @@ export const DIDListTable: FC<DIDListTableProps> = (props) => {
   } = props;
   const [selectedIdentifiers, setSelectedIdentifiers] = useState<string[]>([]);
 
-  const truncate = (string: String): String => {
-    let array: String[] = string.split(':');
-    const pubKey: String = array.pop();
-    const truncatedPubKey = `${pubKey.substring(0, 4)}...${pubKey.substring(pubKey.length - 4, pubKey.length)}`
-    return array.concat(truncatedPubKey).join(':')
-  } 
+  
 
   return (
     <div {...other}>
@@ -61,7 +57,7 @@ export const DIDListTable: FC<DIDListTableProps> = (props) => {
                 DID
               </TableCell>
               <TableCell>
-                ControllerKeyID
+                Controller Key Id
               </TableCell>
               <TableCell align="right">
                 Actions
