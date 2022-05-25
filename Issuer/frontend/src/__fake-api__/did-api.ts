@@ -1,4 +1,4 @@
-import type { IIdentifier } from '@veramo/core';
+import type { IIdentifier, IKey } from '@veramo/core';
 
 class IdentifierApi {
   getIdentifiers(): Promise<IIdentifier[]> {
@@ -116,6 +116,31 @@ class IdentifierApi {
 
     return Promise.resolve(identifier);
   }
+
+  getKeys(): Promise<IKey[]> {
+    const keys: IKey[] = [
+      {
+        kid: '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143c2e',
+        kms: 'local',
+        type: 'Secp256k1',
+        publicKeyHex:
+          '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143c2e',
+        meta: {
+          algorithms: [
+            'ES256K',
+            'ES256K-R',
+            'eth_signTransaction',
+            'eth_signTypedData',
+            'eth_signMessage',
+          ],
+        },
+      },
+    ]
+
+    return Promise.resolve(keys);
+  }
+
+  
 }
 
 export const identifierApi = new IdentifierApi();
