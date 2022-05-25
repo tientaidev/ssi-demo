@@ -40,7 +40,7 @@ const getSections = (t: TFunction): Section[] => [
       },
       {
         title: 'Decentralized Identifiers',
-        path: '/dashboard/dids',
+        path: '/dashboard/identifiers',
         icon: <NumbersOutlined fontSize="small" />,
       },
       {

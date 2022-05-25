@@ -211,7 +211,7 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                   </TableCell>
                   <TableCell align="right">
                     <NextLink
-                      href="/dashboard/customers/1/edit"
+                      href="/dashboard/dids/1/edit"
                       passHref
                     >
                       <IconButton component="a">
@@ -219,7 +219,7 @@ export const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/customers/1"
+                      href="/dashboard/dids/1"
                       passHref
                     >
                       <IconButton component="a">

@@ -97,7 +97,8 @@ export const DIDListTable: FC<DIDListTableProps> = (props) => {
                       </IconButton>
                     </NextLink>
                     <NextLink
-                      href="/dashboard/customers/1"
+                      href="/dashboard/identifiers/[did]" 
+                      as={`/dashboard/identifiers/${identifier.did}`}
                       passHref
                     >
                       <IconButton component="a">
