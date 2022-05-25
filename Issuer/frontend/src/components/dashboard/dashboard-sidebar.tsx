@@ -34,11 +34,6 @@ const getSections = (t: TFunction): Section[] => [
     title: t('Management'),
     items: [
       {
-        title: 'Customers',
-        path: '/dashboard/customers',
-        icon: <NumbersOutlined fontSize="small" />,
-      },
-      {
         title: 'Decentralized Identifiers',
         path: '/dashboard/identifiers',
         icon: <NumbersOutlined fontSize="small" />,
