@@ -20,8 +20,8 @@ module.exports = withTM({
   async redirects() {
     return [
       {
-        source: '/docs',
-        destination: '/docs/welcome',
+        source: '/',
+        destination: '/dashboard',
         permanent: true
       }
     ];
