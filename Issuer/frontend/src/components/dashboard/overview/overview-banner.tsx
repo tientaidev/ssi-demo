@@ -52,14 +52,14 @@ export const OverviewBanner: FC<OverviewBannerProps> = (props) => {
           sx={{ mt: 2 }}
           variant="h4"
         >
-          Welcome to Material Kit Pro v5!
+          Welcome to SSI Management System !
         </Typography>
         <Typography
           color="inherit"
           sx={{ mt: 1 }}
           variant="subtitle2"
         >
-          Your dashboard has been improved! Explore new features like Notifications, Search, Jobs Platform and more.
+          Explore new features like Keys, Credentials and more.
         </Typography>
         <Box sx={{ mt: 2 }}>
           <Button

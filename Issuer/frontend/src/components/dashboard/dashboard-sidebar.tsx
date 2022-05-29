@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import type { TFunction } from 'react-i18next';
+import { Home as HomeIcon } from '../../icons/home';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import type { Theme } from '@mui/material';
 import { Scrollbar } from '../scrollbar';
@@ -29,24 +29,49 @@ interface Section {
   items: Item[];
 }
 
-const getSections = (t: TFunction): Section[] => [
+const getSections = (): Section[] => [
   {
-    title: t('Management'),
+    title: 'General',
     items: [
       {
-        title: 'Decentralized Identifiers',
+        title: 'Overview',
+        path: '/dashboard',
+        icon: <HomeIcon fontSize="small" />
+      }
+    ]
+  },
+  {
+    title: 'Management',
+    items: [
+      {
+        title: 'Identifiers',
         path: '/dashboard/identifiers',
         icon: <NumbersOutlined fontSize="small" />,
+        children: [
+          {
+            title: 'List',
+            path: '/dashboard/identifiers'
+          },
+          {
+            title: 'New',
+            path: '/dashboard/identifiers/new'
+          }
+        ]
       },
       {
         title: 'Verifiable Credentials',
-        path: '/dashboard/products',
+        path: '/dashboard/credentials',
         icon: <VerifiedUser fontSize="small" />,
-      },
-      {
-        title: 'Keys',
-        icon: <Key fontSize="small" />,
-        path: '/dashboard/orders',
+        children: [
+          {
+            title: 'List',
+            path: '/dashboard/credentials'
+          },
+          {
+            title: 'Issue',
+            path: '/dashboard/credentials/new'
+          }
+        ]
       }
     ]
   },
@@ -62,7 +87,7 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
       noSsr: true
     }
   );
-  const sections = useMemo(() => getSections(t), [t]);
+  const sections = getSections();
 
   const handlePathChange = () => {
     if (!router.isReady) {

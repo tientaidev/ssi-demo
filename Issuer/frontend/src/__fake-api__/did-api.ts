@@ -26,6 +26,22 @@ class IdentifierApi {
               ],
             },
           },
+          {
+            kid: '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143d5p',
+            kms: 'local',
+            type: 'Secp256k1',
+            publicKeyHex:
+              '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143d5p',
+            meta: {
+              algorithms: [
+                'ES256K',
+                'ES256K-R',
+                'eth_signTransaction',
+                'eth_signTypedData',
+                'eth_signMessage',
+              ],
+            },
+          }
         ],
         services: [],
       },
@@ -110,6 +126,22 @@ class IdentifierApi {
             ],
           },
         },
+        {
+          kid: '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143d5p',
+          kms: 'local',
+          type: 'Secp256k1',
+          publicKeyHex:
+            '0487eb9ac230a4d3083a1868a7ca1bee04a5aa1c48d25e9ca7a55341e3aa841e000ad3420bb5d9806ff3a66bf4856af2d120492fd40b52f63c69354596ac143d5p',
+          meta: {
+            algorithms: [
+              'ES256K',
+              'ES256K-R',
+              'eth_signTransaction',
+              'eth_signTypedData',
+              'eth_signMessage',
+            ],
+          },
+        }
       ],
       services: [],
     };

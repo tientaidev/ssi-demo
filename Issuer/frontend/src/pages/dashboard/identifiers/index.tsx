@@ -1,55 +1,24 @@
-import { useState, useEffect, useCallback, FormEvent, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import NextLink from 'next/link';
 import type { ChangeEvent, MouseEvent } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import {
   Box,
   Button,
-  Card,
-  Container,
   Divider,
   Grid,
-  InputAdornment,
-  TextField,
   Typography
 } from '@mui/material';
-import { identifierApi } from '../../../__fake-api__/did-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
+import { styled } from '@mui/material/styles';
+import toast from 'react-hot-toast';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { DIDListTable } from '../../../components/dashboard/did/did-list-table';
+import { IdentifierDrawer } from '../../../components/dashboard/identifier/identifier-drawer';
+import { IdentifierListTable } from '../../../components/dashboard/identifier/identifier-list-table';
 import { useMounted } from '../../../hooks/use-mounted';
-import { Download as DownloadIcon } from '../../../icons/download';
 import { Plus as PlusIcon } from '../../../icons/plus';
-import { Search as SearchIcon } from '../../../icons/search';
-import { Upload as UploadIcon } from '../../../icons/upload';
 import { gtm } from '../../../lib/gtm';
 import type { IIdentifier } from '@veramo/core';
-
-interface Filters {
-  query?: string;
-}
-
-const applyFilters = (
-  identifiers: IIdentifier[],
-  filters: Filters
-): IIdentifier[] => identifiers.filter((identifier) => {
-  if (filters.query) {
-    let queryMatched = false;
-    const properties: ('alias' | 'did')[] = ['alias', 'did'];
-
-    properties.forEach((property) => {
-      if ((identifier[property]).toLowerCase().includes(filters.query!.toLowerCase())) {
-        queryMatched = true;
-      }
-    });
-
-    if (!queryMatched) {
-      return false;
-    }
-  }
-
-  return true;
-});
 
 const applyPagination = (
   identifiers: IIdentifier[],
@@ -57,14 +26,44 @@ const applyPagination = (
   rowsPerPage: number
 ): IIdentifier[] => identifiers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const DIDList: NextPage = () => {
+const IdentifierListInner = styled(
+  'div',
+  { shouldForwardProp: (prop) => prop !== 'open' }
+)<{ open?: boolean; }>(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    overflow: 'hidden',
+    paddingBottom: theme.spacing(8),
+    paddingTop: theme.spacing(4),
+    zIndex: 1,
+    [theme.breakpoints.up('lg')]: {
+      marginRight: -500
+    },
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    ...(open && {
+      [theme.breakpoints.up('lg')]: {
+        marginRight: 0
+      },
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    })
+  })
+);
+
+const IdentifierList: NextPage = () => {
   const isMounted = useMounted();
-  const queryRef = useRef<HTMLInputElement | null>(null);
-  const [identifiers, setIdentifiers] = useState<IIdentifier[]>([]);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [filters, setFilters] = useState<Filters>({
-    query: ''
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [identifiers, setIdentifiers] = useState<IIdentifier[]>([]);
+  const [drawer, setDrawer] = useState<{ isOpen: boolean; did: string; }>({
+    isOpen: false,
+    did: undefined
   });
 
   useEffect(() => {
@@ -73,7 +72,8 @@ const DIDList: NextPage = () => {
 
   const getIdentifiers = useCallback(async () => {
     try {
-      const data = await identifierApi.getIdentifiers();
+      const response = await fetch('http://localhost:5000/dids');
+      const data = await response.json();
 
       if (isMounted()) {
         setIdentifiers(data);
@@ -81,7 +81,23 @@ const DIDList: NextPage = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted])
+  }, [isMounted]);
+
+  const handleDeleteIdentifier = async (event, did: string) => {
+    await fetch('http://localhost:5000/dids', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        did: did
+      })
+    }).then((response) => console.log(response))
+
+    toast.success('Identifier deleted!');
+    handleCloseDrawer();
+    getIdentifiers();
+  }
 
   useEffect(
     () => {
@@ -91,14 +107,6 @@ const DIDList: NextPage = () => {
     []
   );
 
-  const handleQueryChange = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    setFilters((prevState) => ({
-      ...prevState,
-      query: queryRef.current?.value
-    }));
-  };
-
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
     setPage(newPage);
   };
@@ -107,26 +115,42 @@ const DIDList: NextPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const handleOpenDrawer = (did: string): void => {
+    setDrawer({
+      isOpen: true,
+      did
+    });
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawer({
+      isOpen: false,
+      did: ''
+    });
+  };
+
   // Usually query is done on backend with indexing solutions
-  const filteredIdentifiers = applyFilters(identifiers, filters);
-  const paginatedIdentifiers = applyPagination(filteredIdentifiers, page, rowsPerPage);
+  const paginatedIdentifiers = applyPagination(identifiers, page, rowsPerPage);
 
   return (
     <>
       <Head>
         <title>
-          Dashboard: Identifiers list
+          Dashboard: Identifiers List
         </title>
       </Head>
       <Box
-        component="main"
+        component='main'
+        ref={rootRef}
         sx={{
+          backgroundColor: 'background.paper',
+          display: 'flex',
           flexGrow: 1,
-          py: 8
+          overflow: 'hidden'
         }}
       >
-        <Container maxWidth="xl">
-          <Box sx={{ mb: 4 }}>
+        <IdentifierListInner open={drawer.isOpen}>
+          <Box sx={{ px: 3, mb: 3 }}>
             <Grid
               container
               justifyContent="space-between"
@@ -138,89 +162,49 @@ const DIDList: NextPage = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Button
-                  startIcon={<PlusIcon fontSize="small" />}
-                  variant="contained"
+                <NextLink
+                  href='/dashboard/identifiers/new'
+                  passHref
                 >
-                  Add
-                </Button>
+                  <Button
+                    startIcon={<PlusIcon fontSize="small" />}
+                    variant="contained"
+                  >
+                    Add
+                  </Button>
+                </NextLink>
               </Grid>
             </Grid>
-            <Box
-              sx={{
-                m: -1,
-                mt: 3
-              }}
-            >
-              <Button
-                startIcon={<UploadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Import
-              </Button>
-              <Button
-                startIcon={<DownloadIcon fontSize="small" />}
-                sx={{ m: 1 }}
-              >
-                Export
-              </Button>
-            </Box>
           </Box>
-          <Card>
-            <Divider />
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexWrap: 'wrap',
-                m: -1.5,
-                p: 3
-              }}
-            >
-              <Box
-                component="form"
-                onSubmit={handleQueryChange}
-                sx={{
-                  flexGrow: 1,
-                  m: 1.5
-                }}
-              >
-                <TextField
-                  defaultValue=""
-                  fullWidth
-                  inputProps={{ ref: queryRef }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon fontSize="small" />
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Search alias"
-                />
-              </Box>
-            </Box>
-            <DIDListTable
-              identifiers={paginatedIdentifiers}
-              identifiersCount={filteredIdentifiers.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            />
-          </Card>
-        </Container>
+          <Divider />
+          <IdentifierListTable
+            onOpenDrawer={handleOpenDrawer}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            identifiers={paginatedIdentifiers}
+            identifiersCount={identifiers.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        </IdentifierListInner>
+        {drawer.did &&
+          <IdentifierDrawer
+            containerRef={rootRef}
+            onClose={handleCloseDrawer}
+            handleDeleteIdentifier={handleDeleteIdentifier}
+            open={drawer.isOpen}
+            did={drawer.did}
+          />
+        }
       </Box>
     </>
   );
 };
 
-DIDList.getLayout = (page) => (
-  <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
-  </AuthGuard>
+IdentifierList.getLayout = (page) => (
+  <DashboardLayout>
+    {page}
+  </DashboardLayout>
 );
 
-export default DIDList;
+export default IdentifierList;

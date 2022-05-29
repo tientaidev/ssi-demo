@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FC, ReactNode } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 import { Box } from '@mui/material';
 
@@ -15,7 +14,6 @@ const DashboardLayoutRoot = styled('div')(
     display: 'flex',
     flex: '1 1 auto',
     maxWidth: '100%',
-    paddingTop: 64,
     [theme.breakpoints.up('lg')]: {
       paddingLeft: 280
     }
@@ -40,7 +38,6 @@ export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
           {children}
         </Box>
       </DashboardLayoutRoot>
-      <DashboardNavbar onOpenSidebar={(): void => setIsSidebarOpen(true)} />
       <DashboardSidebar
         onClose={(): void => setIsSidebarOpen(false)}
         open={isSidebarOpen}
