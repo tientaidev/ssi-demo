@@ -36,9 +36,6 @@ const IdentifierListInner = styled(
     paddingBottom: theme.spacing(8),
     paddingTop: theme.spacing(4),
     zIndex: 1,
-    [theme.breakpoints.up('lg')]: {
-      marginRight: -500
-    },
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
