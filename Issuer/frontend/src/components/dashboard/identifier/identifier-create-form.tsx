@@ -38,7 +38,7 @@ export const ProductCreateForm: FC = (props) => {
     onSubmit: async (values, helpers): Promise<void> => {
       try {
         await createIdentifier(values.alias);
-        toast.success('Product created!');
+        toast.success('Identifier created!');
         router.push('/dashboard/identifiers').catch(console.error);
       } catch (err) {
         console.error(err);

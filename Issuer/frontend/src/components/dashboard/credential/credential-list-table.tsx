@@ -1,45 +1,36 @@
+import { useEffect, useState } from 'react';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
+import NextLink from 'next/link';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import numeral from 'numeral';
 import {
-  Box,
+  IconButton,
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TablePagination,
   TableRow,
-  Typography
 } from '@mui/material';
-import type { Order } from '../../../types/order';
-import { SeverityPill } from '../../severity-pill';
-import type { SeverityPillColor } from '../../severity-pill';
-import { VerifiableCredential } from '@veramo/core';
+import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
+import { Scrollbar } from '../../scrollbar';
+import type { UniqueVerifiableCredential } from '@veramo/data-store';
+import { truncate } from '../../../utils/truncate';
 
 interface CredentialListTableProps {
-  onOpenDrawer?: (orderId: string) => void;
+  credentials: UniqueVerifiableCredential[];
+  credentialsCount: number;
   onPageChange: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  credentials: VerifiableCredential[];
-  credentialsCount: number;
   page: number;
   rowsPerPage: number;
 }
 
-const severityMap: { [key: string]: SeverityPillColor; } = {
-  complete: 'success',
-  pending: 'info',
-  canceled: 'warning',
-  rejected: 'error'
-};
-
 export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
   const {
-    onOpenDrawer,
-    onPageChange,
-    onRowsPerPageChange,
     credentials,
     credentialsCount,
+    onPageChange,
+    onRowsPerPageChange,
     page,
     rowsPerPage,
     ...other
@@ -47,61 +38,62 @@ export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
 
   return (
     <div {...other}>
-      <Table>
-        <TableBody>
-          {credentials.map((credential) => (
-            <TableRow
-              hover
-              key={credential.hash}
-              onClick={() => onOpenDrawer?.(credential.hash)}
-              sx={{ cursor: 'pointer' }}
-            >
-              <TableCell
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex'
-                }}
-              >
-                <Box
-                  sx={{
-                    backgroundColor: (theme) => theme.palette.mode === 'dark'
-                      ? 'neutral.800'
-                      : 'neutral.200',
-                    borderRadius: 2,
-                    maxWidth: 'fit-content',
-                    ml: 3,
-                    p: 1
-                  }}
-                >
-                  <Typography
-                    align="center"
-                    variant="subtitle2"
-                  >
-                    {format(new Date(credential.issuanceDate), 'LLL').toUpperCase()}
-                  </Typography>
-                  <Typography
-                    align="center"
-                    variant="h6"
-                  >
-                    {format(new Date(credential.issuanceDate), 'd')}
-                  </Typography>
-                </Box>
-                <Box sx={{ ml: 2 }}>
-                  <Typography variant="subtitle2">
-                    {credential.hash}
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    {credential.type}
-                  </Typography>
-                </Box>
+      <Scrollbar>
+        <Table sx={{ minWidth: 700 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                Name
+              </TableCell>
+              <TableCell>
+                Issuance Date
+              </TableCell>
+              <TableCell>
+                Expiration Date
+              </TableCell>
+              <TableCell>
+                Issued by
+              </TableCell>
+              <TableCell align="right">
+                Actions
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {credentials.map((credential) => {
+              return (
+                <TableRow
+                  hover
+                  key={credential.hash}
+                >
+                  <TableCell>
+                    {credential.verifiableCredential.name}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(credential.verifiableCredential.issuanceDate).toDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {credential.verifiableCredential.expirationDate}
+                  </TableCell>
+                  <TableCell>
+                    {credential.verifiableCredential.issuer.alias}
+                  </TableCell>
+                  <TableCell align="right">
+                    <NextLink
+                      href={`/dashboard/credentials/${credential.hash}`}
+                      passHref
+                    >
+                      <IconButton component="a">
+                        <ArrowRightIcon fontSize="small" />
+                      </IconButton>
+                    </NextLink>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Scrollbar>
       <TablePagination
         component="div"
         count={credentialsCount}
@@ -116,11 +108,10 @@ export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
 };
 
 CredentialListTable.propTypes = {
-  onOpenDrawer: PropTypes.func,
-  onPageChange: PropTypes.func.isRequired,
-  onRowsPerPageChange: PropTypes.func,
   credentials: PropTypes.array.isRequired,
   credentialsCount: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired
 };
