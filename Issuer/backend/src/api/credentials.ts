@@ -1,9 +1,11 @@
 import { IIdentifier, VerifiableCredential } from "@veramo/core";
 import { UniqueVerifiableCredential } from "@veramo/data-store";
+import { agent } from "../agent/setup";
+import { VeramoDatabase } from "../db/db";
 import express from "express";
-import { agent } from "../veramo/setup";
 
 const router = express.Router();
+const db = new VeramoDatabase();
 
 router.get("/", async (_, res, next) => {
   try {
@@ -85,6 +87,15 @@ router.post("/", async (req, res, next) => {
         proofFormat: "jwt",
       });
     res.send({ credential });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/:hash", async (req, res, next) => {
+  try {
+    const result = await db.deleteCredential(req.params.hash);
+    res.send({ result });
   } catch (err) {
     next(err);
   }

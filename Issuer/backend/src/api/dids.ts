@@ -1,7 +1,7 @@
 import { IIdentifier, IKey } from '@veramo/core';
 import express from 'express';
 const router = express.Router();
-import { agent } from '../veramo/setup';
+import { agent } from '../agent/setup';
 
 router.get('/', async (req, res) => {
   const identifiers = await agent.didManagerFind();

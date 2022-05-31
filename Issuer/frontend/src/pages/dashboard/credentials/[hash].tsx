@@ -3,10 +3,10 @@ import { useRouter } from 'next/router'
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
-import { Box, Button, Container, Grid, Link, Typography } from '@mui/material';
+import { Box, Container, Grid, Link, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { OrderSummary } from '../../../components/dashboard/credential/credential-summary';
+import { CredentialSummary } from '../../../components/dashboard/credential/credential-summary';
 import { useMounted } from '../../../hooks/use-mounted';
 import { gtm } from '../../../lib/gtm';
 import type { VerifiableCredential } from '@veramo/core';
@@ -14,7 +14,7 @@ import type { VerifiableCredential } from '@veramo/core';
 const OrderDetails: NextPage = () => {
   const isMounted = useMounted();
   const router = useRouter();
-  const { hash } = router.query;
+  const hash = router.query.hash as string;
   const [credential, setCredential] = useState<VerifiableCredential | null>(null);
 
   useEffect(() => {
@@ -101,13 +101,9 @@ const OrderDetails: NextPage = () => {
               </Grid>
             </Grid>
           </Box>
-          <OrderSummary credential={credential} />
-          {/* <Box sx={{ mt: 4 }}>
-            <OrderItems orderItems={order.items || []} />
-          </Box>
-          <Box sx={{ mt: 4 }}>
-            <OrderLogs order={order} />
-          </Box> */}
+          <CredentialSummary
+            credential={credential}
+            hash={hash} />
         </Container>
       </Box>
     </>

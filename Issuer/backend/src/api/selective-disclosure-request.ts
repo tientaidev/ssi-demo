@@ -1,5 +1,5 @@
 import express from 'express';
-import { agent } from '../veramo/setup';
+import { agent } from '../agent/setup';
 
 const router = express.Router();
 

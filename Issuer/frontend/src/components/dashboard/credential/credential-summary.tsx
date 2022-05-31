@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import type { ChangeEvent, FC } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
@@ -8,8 +10,8 @@ import {
   Card,
   CardHeader,
   Divider,
-  TextField, Theme,
-  Typography,
+  Theme,
+  CardContent,
   useMediaQuery
 } from '@mui/material';
 import { PropertyList } from '../../property-list';
@@ -17,17 +19,29 @@ import { PropertyListItem } from '../../property-list-item';
 import type { VerifiableCredential } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
 
-interface OrderDetailsProps {
+interface CredentialDetailsProps {
   credential: VerifiableCredential;
+  hash: string;
 }
 
-const statusOptions = ['Canceled', 'Complete', 'Rejected'];
-
-export const OrderSummary: FC<OrderDetailsProps> = (props) => {
-  const { credential, ...other } = props;
+export const CredentialSummary: FC<CredentialDetailsProps> = (props) => {
+  const { credential, hash, ...other } = props;
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-
   const align = smDown ? 'vertical' : 'horizontal';
+
+  const router = useRouter();
+
+  const handleDelete = async (hash: string) => {
+    try {
+      const response = await fetch(`http://localhost:5000/credentials/${hash}`, {
+        method: 'DELETE'
+      });
+      toast.success('Credential deleted!');
+      // router.push('/dashboard/credentials').catch(console.error);
+    } catch (err) {
+      toast.error('Something went wrong!');
+    }
+  }
 
   return (
     <>
@@ -49,7 +63,8 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
           <Divider />
         </PropertyList>
       </Card>
-      <Card {...other} 
+
+      <Card {...other}
         sx={{ mt: 3 }}
       >
         <CardHeader title="Credential Subject" />
@@ -75,7 +90,8 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
           <Divider />
         </PropertyList>
       </Card>
-      <Card {...other} 
+
+      <Card {...other}
         sx={{ mt: 3 }}
       >
         <CardHeader title="Issuer" />
@@ -95,7 +111,7 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
           <Divider />
         </PropertyList>
       </Card>
-      <Card {...other} 
+      <Card {...other}
         sx={{ mt: 3 }}
       >
         <CardHeader title="Date" />
@@ -109,11 +125,27 @@ export const OrderSummary: FC<OrderDetailsProps> = (props) => {
           <Divider />
         </PropertyList>
       </Card>
+
+      <Card {...props}
+        sx={{ mt: 3 }}>
+        <CardHeader title="Data Management" />
+        <Divider />
+        <CardContent>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => handleDelete(hash)}
+          >
+            Delete Credential
+          </Button>
+        </CardContent>
+      </Card>
     </>
   );
 };
 
-OrderSummary.propTypes = {
+CredentialSummary.propTypes = {
   // @ts-ignore
-  order: PropTypes.object.isRequired
+  credential: PropTypes.object.isRequired,
+  hash: PropTypes.string
 };
