@@ -8,7 +8,8 @@ import {
   IResolver,
   IDataStore,
   IKeyManager,
-  IMessageHandler
+  IMessageHandler,
+  IDataStoreORM
 } from "@veramo/core";
 
 // Core identity manager plugin
@@ -30,14 +31,12 @@ import { KeyManagementSystem, SecretBox } from "@veramo/kms-local";
 import { DIDResolverPlugin } from "@veramo/did-resolver";
 import { Resolver } from "did-resolver";
 import { getResolver as ethrDidResolver } from "ethr-did-resolver";
-import { getResolver as webDidResolver } from "web-did-resolver";
 
 // Storage plugin using TypeOrm
 import {
   Entities,
   KeyStore,
   DIDStore,
-  IDataStoreORM,
   DataStoreORM,
   PrivateKeyStore,
   DataStore,
@@ -59,8 +58,6 @@ import {
   SelectiveDisclosure,
 } from "@veramo/selective-disclosure";
 import {
-  DIDComm,
-  DIDCommHttpTransport,
   DIDCommMessageHandler,
   IDIDComm,
 } from "@veramo/did-comm";
@@ -123,7 +120,6 @@ export const agent = createAgent<
     new DIDResolverPlugin({
       resolver: new Resolver({
         ...ethrDidResolver({ infuraProjectId: INFURA_PROJECT_ID }),
-        ...webDidResolver(),
       }),
     }),
     new MessageHandler({
