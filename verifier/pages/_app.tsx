@@ -9,12 +9,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   const theme = createTheme();
 
   return (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <Toaster position="top-center" />
-    <Component {...pageProps} />
-  </ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Toaster position="top-center" />
+      <Component {...pageProps} />
+    </ThemeProvider>
   )
 }
 
-export default MyApp
+export default MyApp;

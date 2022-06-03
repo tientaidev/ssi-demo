@@ -32,7 +32,8 @@ import { PropertyListItem } from '../../property-list-item';
 import type { IIdentifier } from '@veramo/core';
 import { Scrollbar } from '../../scrollbar';
 import { truncate } from '../../../utils/truncate';
-import { computeAddress } from '@veramo/did-provider-ethr/node_modules/@ethersproject/transactions'
+import { computeAddress } from '@ethersproject/transactions'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface IdentifierDrawerProps {
   containerRef?: MutableRefObject<HTMLDivElement | null>;
@@ -120,6 +121,9 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
           disableGutters
           label="Ethereum address"
           value={truncate(ethereumAddress)}
+          secondaryAction={
+            <ContentCopyIcon fontSize='small' />
+          }
         />
         <PropertyListItem
           align={align}

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
@@ -13,8 +12,10 @@ import {
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import { Scrollbar } from '../../scrollbar';
-import type { UniqueVerifiableCredential } from '@veramo/data-store';
-import { truncate } from '../../../utils/truncate';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import type { UniqueVerifiableCredential } from '@veramo/core';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { toast } from 'react-hot-toast';
 
 interface CredentialListTableProps {
   credentials: UniqueVerifiableCredential[];
@@ -76,9 +77,18 @@ export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
                     {credential.verifiableCredential.expirationDate}
                   </TableCell>
                   <TableCell>
-                    {credential.verifiableCredential.issuer.alias}
+                    {typeof credential.verifiableCredential.issuer === 'object' ? credential.verifiableCredential.issuer.alias : ''}
                   </TableCell>
                   <TableCell align="right">
+                    <CopyToClipboard 
+                      text={credential.verifiableCredential.proof.jwt}
+                      onCopy={() => toast.success('Sucessfully copied credential')}
+                    >
+                      <IconButton component="a">
+                        <ContentCopyIcon fontSize="small" />
+                      </IconButton>
+                    </CopyToClipboard>
+                    
                     <NextLink
                       href={`/dashboard/credentials/${credential.hash}`}
                       passHref

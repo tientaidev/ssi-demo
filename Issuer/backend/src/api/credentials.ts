@@ -1,5 +1,4 @@
-import { IIdentifier, VerifiableCredential } from "@veramo/core";
-import { UniqueVerifiableCredential } from "@veramo/data-store";
+import { IIdentifier, VerifiableCredential, UniqueVerifiableCredential, IssuerType } from "@veramo/core";
 import { agent } from "../agent/setup";
 import { VeramoDatabase } from "../db/db";
 import express from "express";
@@ -18,17 +17,18 @@ router.get("/", async (_, res, next) => {
       mappings.set(identifier.did, identifier.alias || "")
     );
 
-    const result: UniqueVerifiableCredential[] = credentials.map(
+    credentials.map(
       (credential) => {
-        let issuer = credential.verifiableCredential.issuer;
-        issuer.alias = mappings.get(
-          issuer.id
-        );
+        let issuer: IssuerType = credential.verifiableCredential.issuer;
+        if (typeof issuer === 'object') {
+          issuer.alias = mappings.get(issuer.id);
+        }
+        
         return credential;
       }
     );
 
-    res.send(result);
+    res.send(credentials);
   } catch (err) {
     next(err);
   }
@@ -40,9 +40,11 @@ router.get("/:hash", async (req, res, next) => {
       hash: req.params.hash
     });
 
-    credential.issuer.alias = await agent.didManagerGet({
-      did: credential.issuer.id
-    }).then(did => did.alias)
+    if (typeof credential.issuer === 'object') {
+      credential.issuer.alias = await agent.didManagerGet({
+        did: credential.issuer.id
+      }).then(did => did.alias)
+    }
 
     res.send(credential);
   } catch (err) {

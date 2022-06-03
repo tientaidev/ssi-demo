@@ -13,6 +13,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { ArrowRight as ArrowRightIcon } from '../../icons/arrow-right';
 import { agent } from '../../veramo/setup';
+import { decodeJWT } from 'did-jwt';
 
 interface JobDetailsStepProps {
   onNext?: () => void;
@@ -22,13 +23,17 @@ interface JobDetailsStepProps {
   challenge: string;
 }
 
+interface Condition {
+  text: string;
+  valid: boolean;
+}
+
 export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
   const { onBack, onNext, jwt, domain, challenge, ...other } = props;
-
-  const conditions = [
+  const [conditions, setConditions] = useState<Condition[]>([
     {
       text: 'Holder signature is valid',
-      valid: true
+      valid: false
     },
     {
       text: 'Domain is correct',
@@ -38,21 +43,31 @@ export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
       text: 'Challenge is correct',
       valid: true
     }
-  ]
+  ]);
 
   useEffect(() => {
-    async function verifyPresentation() {
+    async function verifySignature() {
       const result: boolean = await agent.verifyPresentation({
-        presentation: jwt,
-        challenge: challenge,
-        domain: domain
+        presentation: jwt
       })
-
-      console.log(result)
+      
+      setConditions((previousCondition) => {
+        let newCondition = [...previousCondition];
+        newCondition[0].valid = result;
+        return newCondition;
+      })
     }
 
-    if (jwt && challenge && domain) verifyPresentation();
-  }, [jwt, challenge, domain]);
+    async function verifyChallengeAndDomain() {
+      const { payload, header, signature, data } = decodeJWT(jwt);
+      console.log(payload);
+    }
+
+    if (jwt) {
+      verifySignature();
+      verifyChallengeAndDomain();
+    }
+  }, [jwt]);
 
   return (
     <div {...other}>

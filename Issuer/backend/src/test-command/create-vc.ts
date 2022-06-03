@@ -6,16 +6,18 @@ async function main() {
     alias: 'DSA'
   });
 
-  await agent.createVerifiableCredential({
+  const credential = await agent.createVerifiableCredential({
     credential: {
       issuer: issuer.did,
       credentialSubject: {
-        name: 'Class Certificate',
+        course: 'DSA certificate',
+        pass: true
       }
     },
-    proofFormat: 'jwt',
-    save: true
+    proofFormat: 'jwt'
   })
+
+  console.log(credential);
 }
 
 main().catch(console.log)
