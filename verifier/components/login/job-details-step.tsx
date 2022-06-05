@@ -49,13 +49,13 @@ export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
     async function verifySignature() {
       const result: boolean = await agent.verifyPresentation({
         presentation: jwt
-      })
+      });
       
       setConditions((previousCondition) => {
         let newCondition = [...previousCondition];
         newCondition[0].valid = result;
         return newCondition;
-      })
+      });
     }
 
     async function verifyChallengeAndDomain() {
