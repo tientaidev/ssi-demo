@@ -1,39 +1,35 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router'
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Container, Grid, Link, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
 import { CredentialSummary } from '../../../components/dashboard/credential/credential-summary';
-import { useMounted } from '../../../hooks/use-mounted';
-import { gtm } from '../../../lib/gtm';
 import type { VerifiableCredential } from '@veramo/core';
 
-const OrderDetails: NextPage = () => {
-  const isMounted = useMounted();
+const CredentialDetails: NextPage = () => {
   const router = useRouter();
   const hash = router.query.hash as string;
   const [credential, setCredential] = useState<VerifiableCredential | null>(null);
 
-  useEffect(() => {
-    gtm.push({ event: 'page_view' });
-  }, []);
-
-  const getCredential = useCallback(async () => {
+  const getCredential = async () => {
     try {
       const response: Response = await fetch(`http://localhost:5000/credentials/${router.query.hash}`);
-      const data = await response.json();
-
-      if (isMounted()) {
-        setCredential(data);
+      if (response.status === 400) {
+        toast.error('Error when loading credential');
+        router.push('/dashboard/credentials');
+        return;
       }
+
+      const data = await response.json();
+      setCredential(data);
     } catch (err) {
-      console.error(err);
+      toast.error(err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted]);
+  };
 
   useEffect(
     () => {
@@ -110,11 +106,11 @@ const OrderDetails: NextPage = () => {
   );
 };
 
-OrderDetails.getLayout = (page) => (
+CredentialDetails.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default OrderDetails;
+export default CredentialDetails;
 

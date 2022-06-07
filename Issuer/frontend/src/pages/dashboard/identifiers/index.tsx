@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NextLink from 'next/link';
 import type { ChangeEvent, MouseEvent } from 'react';
 import type { NextPage } from 'next';
@@ -12,12 +12,10 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
 import { IdentifierDrawer } from '../../../components/dashboard/identifier/identifier-drawer';
 import { IdentifierListTable } from '../../../components/dashboard/identifier/identifier-list-table';
-import { useMounted } from '../../../hooks/use-mounted';
 import { Plus as PlusIcon } from '../../../icons/plus';
-import { gtm } from '../../../lib/gtm';
 import type { IIdentifier } from '@veramo/core';
 
 const applyPagination = (
@@ -53,7 +51,6 @@ const IdentifierListInner = styled(
 );
 
 const IdentifierList: NextPage = () => {
-  const isMounted = useMounted();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -63,35 +60,27 @@ const IdentifierList: NextPage = () => {
     did: undefined
   });
 
-  useEffect(() => {
-    gtm.push({ event: 'page_view' });
-  }, []);
-
-  const getIdentifiers = useCallback(async () => {
+  const getIdentifiers = async () => {
     try {
       const response = await fetch('http://localhost:5000/dids');
       const data = await response.json();
-
-      if (isMounted()) {
-        setIdentifiers(data);
-      }
+      setIdentifiers(data);
     } catch (err) {
-      console.error(err);
+      toast.error(err);
     }
-  }, [isMounted]);
+  };
 
-  const handleDeleteIdentifier = async (event, did: string) => {
-    await fetch('http://localhost:5000/dids', {
+  const handleDeleteIdentifier = async (did: string) => {
+    const response: Response = await fetch(`http://localhost:5000/dids/${did}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        did: did
-      })
-    }).then((response) => console.log(response))
+      }
+    });
 
-    toast.success('Identifier deleted!');
+    if (response.status === 200) toast.success('Identifier deleted!');
+    else toast.error('Something wrong happens');
+    
     handleCloseDrawer();
     getIdentifiers();
   }

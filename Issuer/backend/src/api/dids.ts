@@ -1,9 +1,9 @@
-import { IIdentifier, IKey } from '@veramo/core';
+import type { IIdentifier, IKey } from '@veramo/core';
 import express from 'express';
 const router = express.Router();
 import { agent } from '../agent/setup';
 
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
   const identifiers = await agent.didManagerFind();
   res.send(identifiers)
 })
@@ -25,10 +25,12 @@ router.post('/', async (req, res) => {
 
 router.post('/add-key', async (req, res, next) => {
   try {
-    const key: IKey = await agent.keyManagerCreate({
-      kms: 'local',
+    const key: IKey = {
+      kms: 'external',
+      publicKeyHex: req.body.publicKeyHex,
+      kid: req.body.publicKeyHex,
       type: 'Secp256k1'
-    })
+    }
     
     const result = await agent.didManagerAddKey({
       did: req.body.did,

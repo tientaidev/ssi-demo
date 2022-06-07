@@ -7,7 +7,7 @@ import {
   Grid,
   Typography
 } from '@mui/material';
-import { DashboardLayout } from '../../components/dashboard/dashboard-layout';
+import { DashboardLayout } from '../../components/dashboard/layout/dashboard-layout';
 
 const Overview: NextPage = () => {
 

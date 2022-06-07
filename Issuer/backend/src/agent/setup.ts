@@ -9,7 +9,6 @@ import {
   IDataStore,
   IKeyManager,
   IMessageHandler,
-  IDataStoreORM
 } from "@veramo/core";
 
 // Core identity manager plugin
@@ -37,6 +36,7 @@ import {
   Entities,
   KeyStore,
   DIDStore,
+  IDataStoreORM,
   DataStoreORM,
   PrivateKeyStore,
   DataStore,

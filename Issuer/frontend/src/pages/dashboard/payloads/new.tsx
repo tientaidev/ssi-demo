@@ -4,15 +4,14 @@ import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
-import { ProductCreateForm } from '../../../components/dashboard/credential/credential-create-form';
+import { PayloadGenerateForm } from '../../../components/dashboard/payload/payload-generate-form';
 
-const ProductCreate: NextPage = () => {
-
+const PayloadGenerate: NextPage = () => {
   return (
     <>
       <Head>
         <title>
-          Dashboard: Issue Credential
+          Generate Credential Payload
         </title>
       </Head>
       <Box
@@ -25,7 +24,7 @@ const ProductCreate: NextPage = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4">
-              Issue a new credential
+              Generate credential payload
             </Typography>
             <Breadcrumbs
               separator="/"
@@ -54,21 +53,21 @@ const ProductCreate: NextPage = () => {
                 color="textSecondary"
                 variant="subtitle2"
               >
-                Credentials
+                Payloads
               </Typography>
             </Breadcrumbs>
           </Box>
-          <ProductCreateForm />
+          <PayloadGenerateForm />
         </Container>
       </Box>
     </>
   );
 };
 
-ProductCreate.getLayout = (page) => (
+PayloadGenerate.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default ProductCreate;
+export default PayloadGenerate;

@@ -16,7 +16,7 @@ import type { ChangeEvent, MouseEvent } from 'react';
 import type { NextPage } from 'next';
 import type { IIdentifier } from '@veramo/core';
 // components
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
 import { IdentifierDrawer } from '../../../components/dashboard/identifier/identifier-drawer';
 import { IdentifierListTable } from '../../../components/dashboard/identifier/identifier-list-table';
 

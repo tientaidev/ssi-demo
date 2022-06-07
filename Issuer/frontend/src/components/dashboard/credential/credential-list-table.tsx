@@ -11,9 +11,9 @@ import {
   TableRow,
 } from '@mui/material';
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
-import { Scrollbar } from '../../scrollbar';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import type { UniqueVerifiableCredential } from '@veramo/core';
+import { Scrollbar } from '../../misc/scrollbar';
+import type { UniqueVerifiableCredential } from '@veramo/data-store';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-hot-toast';
 
@@ -77,7 +77,7 @@ export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
                     {credential.verifiableCredential.expirationDate}
                   </TableCell>
                   <TableCell>
-                    {typeof credential.verifiableCredential.issuer === 'object' ? credential.verifiableCredential.issuer.alias : ''}
+                    {credential.verifiableCredential.issuer.alias}
                   </TableCell>
                   <TableCell align="right">
                     <CopyToClipboard 

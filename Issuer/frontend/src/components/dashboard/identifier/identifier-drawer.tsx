@@ -1,7 +1,7 @@
-import { SyntheticEvent, useState, useCallback, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
 import type { FC, MutableRefObject } from 'react';
 import PropTypes from 'prop-types';
+import toast from 'react-hot-toast';
 import NextLink from 'next/link';
 import {
   Box,
@@ -19,92 +19,44 @@ import {
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material/styles';
-import { SeverityPill } from '../../severity-pill'
+import { SeverityPill } from '../../misc/severity-pill'
 import { Plus as PlusIcon } from '../../../icons/plus';;
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { useMounted } from '../../../hooks/use-mounted';
+import { Close as CloseIcon, Edit as EditIcon, ArrowUpward as ArrowUpwardIcon, AddLink as AddLinkIcon } from '@mui/icons-material';
 import Link from '@mui/material/Link';
 import { X as XIcon } from '../../../icons/x';
-import { PropertyList } from '../../property-list';
-import { PropertyListItem } from '../../property-list-item';
+import { PropertyList } from '../../misc/property-list';
+import { PropertyListItem } from '../../misc/property-list-item';
 import type { IIdentifier } from '@veramo/core';
-import { Scrollbar } from '../../scrollbar';
+import { Scrollbar } from '../../misc/scrollbar';
 import { truncate } from '../../../utils/truncate';
 import { computeAddress } from '@ethersproject/transactions'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface IdentifierDrawerProps {
   containerRef?: MutableRefObject<HTMLDivElement | null>;
   open?: boolean;
   onClose?: () => void;
-  handleDeleteIdentifier: (event: SyntheticEvent, did: string) => void;
+  handleDeleteIdentifier: (did: string) => void;
   did?: string;
 }
 
 interface IdentifierPreviewProps {
   lgUp: boolean;
   onEdit?: () => void;
-  handleDeleteIdentifier: (event: SyntheticEvent, did: string) => void;
-  handleAddKey: (did: string) => void;
+  handleDeleteIdentifier: (did: string) => void;
   handleRemoveKey: (did: string, kid: string) => void;
   identifier: IIdentifier;
-  loadingAddButton: boolean;
   loadingRemoveButtonKid: string;
 }
 
 const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
-  const { lgUp, onEdit, identifier, handleDeleteIdentifier, handleAddKey, handleRemoveKey, loadingAddButton, loadingRemoveButtonKid } = props;
+  const { lgUp, onEdit, identifier, handleDeleteIdentifier, handleRemoveKey, loadingRemoveButtonKid } = props;
   const align = lgUp ? 'horizontal' : 'vertical';
 
   const ethereumAddress = computeAddress('0x' + identifier.controllerKeyId);
 
   return (
     <>
-      <Box
-        sx={{
-          alignItems: 'center',
-          backgroundColor: (theme) => theme.palette.mode === 'dark'
-            ? 'neutral.800'
-            : 'neutral.100',
-          borderRadius: 1,
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          px: 3,
-          py: 2.5
-        }}
-      >
-        <Typography
-          color="textSecondary"
-          sx={{ mr: 2 }}
-          variant="overline"
-        >
-          Actions
-        </Typography>
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            flexWrap: 'wrap',
-            m: -1,
-            '& > button': {
-              m: 1
-            }
-          }}
-        >
-          <Button
-            onClick={onEdit}
-            size="small"
-            startIcon={(<EditIcon fontSize="small" />)}
-          >
-            Edit
-          </Button>
-        </Box>
-      </Box>
       <Typography
-        sx={{ my: 3 }}
         variant="h6"
       >
         Details
@@ -121,9 +73,6 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
           disableGutters
           label="Ethereum address"
           value={truncate(ethereumAddress)}
-          secondaryAction={
-            <ContentCopyIcon fontSize='small' />
-          }
         />
         <PropertyListItem
           align={align}
@@ -144,21 +93,12 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
           Keys
         </Typography>
         <Box>
-          <LoadingButton
-            loadingPosition="start"
-            loading={loadingAddButton}
-            onClick={() => handleAddKey(identifier.did)}
-            size="small"
-            startIcon={(<PlusIcon fontSize="small" />)}
-          >
-            Add
-          </LoadingButton>
           <Button
             onClick={onEdit}
-            size="small"
-            startIcon={(<ArrowUpwardIcon fontSize="small" />)}
+            size='small'
+            startIcon={(<AddLinkIcon />)}
           >
-            Import
+            Add key
           </Button>
         </Box>
 
@@ -171,7 +111,7 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
                 Public key
               </TableCell>
               <TableCell>
-                Type
+                System
               </TableCell>
               <TableCell>
                 Role
@@ -188,7 +128,7 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
                   {truncate(item.publicKeyHex)}
                 </TableCell>
                 <TableCell>
-                  {item.type}
+                  Internal
                 </TableCell>
                 <TableCell>
                   <SeverityPill color={identifier.controllerKeyId === item.publicKeyHex ? 'info' : 'warning'}>
@@ -212,9 +152,9 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
             ))}
           </TableBody>
         </Table>
-        <Link 
-          href={`https://rinkeby.etherscan.io//address/${ethereumAddress}`}
-          target='_blank' 
+        <Link
+          href={`https://rinkeby.etherscan.io/address/${ethereumAddress}`}
+          target='_blank'
           underline='none'
         >
           <Button
@@ -227,7 +167,7 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
         <Button
           color="error"
           sx={{ mt: 3 }}
-          onClick={(event) => handleDeleteIdentifier(event, identifier.did)}
+          onClick={() => handleDeleteIdentifier(identifier.did)}
         >
           Delete identifier
         </Button>
@@ -238,12 +178,19 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
 
 interface IdentifierFormProps {
   onCancel?: () => void;
-  onSave?: () => void;
+  onSave?: (pubKey: string) => void;
+  loadingSaveButton: boolean;
   identifier: IIdentifier;
 }
 
 const IdentifierForm: FC<IdentifierFormProps> = (props) => {
-  const { onCancel, onSave, identifier } = props;
+  const { onCancel, onSave, loadingSaveButton, identifier } = props;
+  const [publicKeyHex, setPublicKeyHex] = useState<string>('');
+  
+  const submitForm = async () => {
+    if (!publicKeyHex) return;
+    onSave(publicKeyHex);
+  }
 
   return (
     <>
@@ -266,7 +213,7 @@ const IdentifierForm: FC<IdentifierFormProps> = (props) => {
           sx={{ mr: 2 }}
           color="textSecondary"
         >
-          Identifier
+          Key
         </Typography>
         <Box
           sx={{
@@ -278,14 +225,14 @@ const IdentifierForm: FC<IdentifierFormProps> = (props) => {
             }
           }}
         >
-          <Button
+          <LoadingButton
             color="primary"
-            onClick={onSave}
+            onClick={submitForm}
             size="small"
             variant="contained"
           >
             Save changes
-          </Button>
+          </LoadingButton>
           <Button
             onClick={onCancel}
             size="small"
@@ -295,33 +242,30 @@ const IdentifierForm: FC<IdentifierFormProps> = (props) => {
           </Button>
         </Box>
       </Box>
-      <Typography
-        sx={{ my: 3 }}
-        variant="h6"
-      >
-        Details
-      </Typography>
       <TextField
         disabled
         fullWidth
         label="ID"
         margin="normal"
         name="id"
-        value={identifier.did}
+        defaultValue={identifier.did}
       />
       <TextField
+        disabled
         fullWidth
         label="Alias"
         margin="normal"
         name="alias"
         defaultValue={identifier.alias}
       />
-      <Button
-        color="error"
-        sx={{ mt: 3 }}
-      >
-        Delete Identifier
-      </Button>
+      <TextField
+        fullWidth
+        label="Public key hex"
+        margin="normal"
+        name="publicKeyHex"
+        value={publicKeyHex}
+        onChange={(event) => setPublicKeyHex(event.target.value)}
+      />
     </>
   );
 };
@@ -351,10 +295,9 @@ const IdentifierDrawerMobile = styled(Drawer)({
 export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
   const { containerRef, onClose, handleDeleteIdentifier, open, did, ...other } = props;
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [identifier, setIdentifier] = useState<IIdentifier>(null);
-  const [loadingAddButton, setLoadingAddButton] = useState<boolean>(false);
+  const [identifier, setIdentifier] = useState<IIdentifier>();
   const [loadingRemoveButtonKid, setLoadingRemoveButtonKid] = useState<string>('');
-  const isMounted = useMounted();
+  const [loadingSaveButton, setLoadingSaveButton] = useState<boolean>(false);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
 
   const handleEdit = () => {
@@ -365,29 +308,26 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
     setIsEditing(false);
   };
 
-  const getIdentifier = useCallback(async (did: string) => {
+  const getIdentifier = async (did: string) => {
     try {
       const response = await fetch(`http://localhost:5000/dids/${did}`);
       const data = await response.json();
-
-      if (isMounted()) {
-        setIdentifier(data);
-      }
-    } catch (err) {
-      console.error(err);
+      setIdentifier(data);
+    } catch (error) {
+      toast.error((error as Error).message);
     }
-  }, [isMounted]);
+  }
 
   useEffect(
     () => {
-      getIdentifier(did);
+      getIdentifier(did as string);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [did]
   );
 
-  const handleAddKey = async (did: string) => {
-    setLoadingAddButton(true);
+  const handleAddKey = async (publicKeyHex: string) => {
+    setLoadingSaveButton(true);
     const result = await fetch('http://localhost:5000/dids/add-key', {
       method: 'POST',
       headers: {
@@ -395,10 +335,11 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
       },
       body: JSON.stringify({
         did: did,
+        publicKeyHex: publicKeyHex
       })
     })
 
-    setLoadingAddButton(false);
+    setLoadingSaveButton(false);
     if (result.status === 200) {
       toast.success('Key successfully added!');
     } else {
@@ -475,16 +416,15 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
                   onEdit={handleEdit}
                   identifier={identifier}
                   handleDeleteIdentifier={handleDeleteIdentifier}
-                  handleAddKey={handleAddKey}
                   handleRemoveKey={handleRemoveKey}
-                  loadingAddButton={loadingAddButton}
                   loadingRemoveButtonKid={loadingRemoveButtonKid}
                 />
               )
               : (
                 <IdentifierForm
                   onCancel={handleCancel}
-                  onSave={handleCancel}
+                  onSave={handleAddKey}
+                  loadingSaveButton={loadingSaveButton}
                   identifier={identifier}
                 />
               )
@@ -526,7 +466,7 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
 IdentifierDrawer.propTypes = {
   containerRef: PropTypes.any,
   onClose: PropTypes.func,
-  handleDeleteIdentifier: PropTypes.func,
+  handleDeleteIdentifier: PropTypes.func.isRequired,
   open: PropTypes.bool,
   // @ts-ignore
   did: PropTypes.string

@@ -13,7 +13,7 @@ import type { IIdentifier } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
 
 interface IdentifierListTableProps {
-  onOpenDrawer?: (did: string) => void;
+  onOpenDrawer: (did: string) => void;
   onPageChange: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   onRowsPerPageChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   identifiers: IIdentifier[];
@@ -81,7 +81,7 @@ export const IdentifierListTable: FC<IdentifierListTableProps> = (props) => {
 };
 
 IdentifierListTable.propTypes = {
-  onOpenDrawer: PropTypes.func,
+  onOpenDrawer: PropTypes.func.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onRowsPerPageChange: PropTypes.func,
   identifiers: PropTypes.array.isRequired,

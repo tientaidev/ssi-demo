@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
+import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
 import { ProductCreateForm } from '../../../components/dashboard/identifier/identifier-create-form';
 
 const ProductCreate: NextPage = () => {

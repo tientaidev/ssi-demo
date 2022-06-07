@@ -42,14 +42,13 @@ const App: FC<EnhancedAppProps> = (props) => {
               })}
             >
               <CssBaseline />
+              <Toaster position="top-center" />
               { getLayout(<Component {...pageProps} />) }
             </ThemeProvider>
           )}
         </SettingsConsumer>
       </SettingsProvider>
-
     </CacheProvider>
-
   )
 }
 

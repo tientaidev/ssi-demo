@@ -25,7 +25,7 @@ import { Close as CloseIcon, Edit as EditIcon, ArrowUpward as ArrowUpwardIcon, A
 import Link from '@mui/material/Link';
 import { X as XIcon } from '../../../icons/x';
 import { PropertyList } from '../../property-list';
-import { PropertyListItem } from '../../property-list-item';
+import { PropertyListItem } from '../../misc/property-list-item';
 import type { IIdentifier } from '@veramo/core';
 import { Scrollbar } from '../../scrollbar';
 import { truncate } from '../../../utils/truncate';

@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import { useMounted } from '../../../hooks/use-mounted';
 import type { FC } from 'react';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
@@ -21,7 +20,6 @@ import { truncate } from '../../../utils/truncate';
 
 export const ProductCreateForm: FC = (props) => {
   const router = useRouter();
-  const isMounted = useMounted();
   const [identifiers, setIdentifiers] = useState<IIdentifier[]>(null);
 
   const formik = useFormik({
@@ -67,18 +65,15 @@ export const ProductCreateForm: FC = (props) => {
     }
   });
 
-  const getIdentifiers = useCallback(async () => {
+  const getIdentifiers = async () => {
     try {
       const response = await fetch('http://localhost:5000/dids');
       const data = await response.json();
-
-      if (isMounted()) {
-        setIdentifiers(data);
-      }
+      setIdentifiers(data);
     } catch (err) {
       console.error(err);
     }
-  }, [isMounted]);
+  };
 
   useEffect(() => {
     getIdentifiers();

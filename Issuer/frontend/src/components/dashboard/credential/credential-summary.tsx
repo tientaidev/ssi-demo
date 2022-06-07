@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/router';
-import type { ChangeEvent, FC } from 'react';
+import type { FC } from 'react';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 import {
-  Box,
   Button,
   Card,
   CardHeader,
@@ -14,8 +11,8 @@ import {
   CardContent,
   useMediaQuery
 } from '@mui/material';
-import { PropertyList } from '../../property-list';
-import { PropertyListItem } from '../../property-list-item';
+import { PropertyList } from '../../misc/property-list';
+import { PropertyListItem } from '../../misc/property-list-item';
 import type { VerifiableCredential } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
 
@@ -28,7 +25,6 @@ export const CredentialSummary: FC<CredentialDetailsProps> = (props) => {
   const { credential, hash, ...other } = props;
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
   const align = smDown ? 'vertical' : 'horizontal';
-
   const router = useRouter();
 
   const handleDelete = async (hash: string) => {
@@ -37,7 +33,7 @@ export const CredentialSummary: FC<CredentialDetailsProps> = (props) => {
         method: 'DELETE'
       });
       toast.success('Credential deleted!');
-      // router.push('/dashboard/credentials').catch(console.error);
+      router.push('/dashboard/credentials');
     } catch (err) {
       toast.error('Something went wrong!');
     }

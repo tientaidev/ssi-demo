@@ -25,7 +25,7 @@ const createIdentifier = async (alias: string) => {
 }
 
 
-export const ProductCreateForm: FC = (props) => {
+export const IdentifierCreateForm: FC = (props) => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
