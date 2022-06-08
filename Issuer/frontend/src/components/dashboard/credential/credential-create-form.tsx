@@ -18,7 +18,7 @@ import {
 import { IIdentifier } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
 
-export const ProductCreateForm: FC = (props) => {
+export const CredentialCreateForm: FC = (props) => {
   const router = useRouter();
   const [identifiers, setIdentifiers] = useState<IIdentifier[]>(null);
 

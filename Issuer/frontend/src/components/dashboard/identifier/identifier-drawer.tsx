@@ -128,7 +128,7 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
                   {truncate(item.publicKeyHex)}
                 </TableCell>
                 <TableCell>
-                  Internal
+                  {item.kms}
                 </TableCell>
                 <TableCell>
                   <SeverityPill color={identifier.controllerKeyId === item.publicKeyHex ? 'info' : 'warning'}>
@@ -142,9 +142,8 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
                       loadingPosition='center'
                       loading={loadingRemoveButtonKid === item.publicKeyHex}
                       onClick={() => handleRemoveKey(identifier.did, item.publicKeyHex)}
-                      size='small'
-                      startIcon={(<CloseIcon fontSize="small" />)}
-                    >
+                      size='small'>
+                        <CloseIcon />
                     </LoadingButton>
                   }
                 </TableCell>
@@ -227,6 +226,7 @@ const IdentifierForm: FC<IdentifierFormProps> = (props) => {
         >
           <LoadingButton
             color="primary"
+            loading={loadingSaveButton}
             onClick={submitForm}
             size="small"
             variant="contained"
@@ -342,6 +342,7 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
     setLoadingSaveButton(false);
     if (result.status === 200) {
       toast.success('Key successfully added!');
+      setIsEditing(false);
     } else {
       toast.error('Insufficient fund. Please fund your Ethereum account');
     }
@@ -351,7 +352,7 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
 
   const handleRemoveKey = async (did: string, kid: string) => {
     setLoadingRemoveButtonKid(kid);
-    const result = await fetch('http://localhost:5000/dids/remove-key', {
+    const response = await fetch('http://localhost:5000/dids/remove-key', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -363,10 +364,10 @@ export const IdentifierDrawer: FC<IdentifierDrawerProps> = (props) => {
     })
 
     setLoadingRemoveButtonKid('');
-    if (result.status === 200) {
+    if (response.status === 200) {
       toast.success('Key successfully removed!');
     } else {
-      toast.error('Insufficient fund. Please fund your Ethereum account');
+      toast.error('Error');
     }
 
     getIdentifier(did);

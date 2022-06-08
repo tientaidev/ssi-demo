@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
-import { CredentialCreateForm } from '../../../components/dashboard/credential/credential-create-form';
+import { CredentialImportForm } from '../../../components/dashboard/credential/credential-import-form';
 
 const ProductCreate: NextPage = () => {
 
@@ -12,7 +11,7 @@ const ProductCreate: NextPage = () => {
     <>
       <Head>
         <title>
-          Dashboard: Issue Credential
+          Dashboard: Import Credential
         </title>
       </Head>
       <Box
@@ -25,7 +24,7 @@ const ProductCreate: NextPage = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4">
-              Issue a new credential
+              Import a new credential
             </Typography>
             <Breadcrumbs
               separator="/"
@@ -58,7 +57,7 @@ const ProductCreate: NextPage = () => {
               </Typography>
             </Breadcrumbs>
           </Box>
-          <CredentialCreateForm />
+          <CredentialImportForm />
         </Container>
       </Box>
     </>

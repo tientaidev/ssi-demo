@@ -1,12 +1,19 @@
-import type { IIdentifier, VerifiableCredential } from "@veramo/core";
+import type {
+  IIdentifier,
+  VerifiableCredential,
+  IDataStoreSaveVerifiableCredentialArgs,
+} from "@veramo/core";
 import type { UniqueVerifiableCredential } from "@veramo/data-store";
 import type { ICreateVerifiableCredentialArgs } from "@veramo/credential-w3c";
-import type { CredentialPayload, JwtCredentialPayload } from "did-jwt-vc";
+import { CredentialPayload, JwtCredentialPayload, normalizeCredential } from "did-jwt-vc";
 import type { JWTHeader, JWTPayload } from "did-jwt";
 import { agent } from "../agent/setup";
 import { VeramoDatabase } from "../db/db";
 import { encodeBase64url } from "../util";
-import { transformCredentialInput, validateJwtCredentialPayload } from "did-jwt-vc";
+import {
+  transformCredentialInput,
+  validateJwtCredentialPayload,
+} from "did-jwt-vc";
 import express from "express";
 
 const router = express.Router();
@@ -81,12 +88,17 @@ router.post("/generate-signing-input", async (req, res, next) => {
   const args: ICreateVerifiableCredentialArgs = req.body;
   const credential: Partial<CredentialPayload> = {
     ...args?.credential,
-    "@context": args?.credential?.["@context"] || ["https://www.w3.org/2018/credentials/v1"],
+    "@context": args?.credential?.["@context"] || [
+      "https://www.w3.org/2018/credentials/v1",
+    ],
     type: args?.credential?.type || ["VerifiableCredential"],
     issuanceDate: args?.credential?.issuanceDate || new Date().toISOString(),
   };
 
-  const issuer = typeof credential.issuer === "string" ? credential.issuer : credential?.issuer?.id;
+  const issuer =
+    typeof credential.issuer === "string"
+      ? credential.issuer
+      : credential?.issuer?.id;
   if (!issuer || typeof issuer === "undefined") {
     next("invalid_argument: args.credential.issuer must not be empty");
   }
@@ -98,20 +110,40 @@ router.post("/generate-signing-input", async (req, res, next) => {
   validateJwtCredentialPayload(parsedPayload);
 
   const header: Partial<JWTHeader> = {
-    typ: 'JWT',
-    alg: "ES256K"
-  }
+    typ: "JWT",
+    alg: "ES256K",
+  };
 
   const timestamps: Partial<JWTPayload> = {
     iat: Math.floor(Date.now() / 1000),
     exp: undefined,
-  }
+  };
 
   const fullPayload = { ...timestamps, ...parsedPayload, iss: issuer };
-  const encodedPayload = typeof fullPayload === 'string' ? fullPayload : encodeBase64url(JSON.stringify(fullPayload));
-  const signingInput: string = [encodeBase64url(JSON.stringify(header)), encodedPayload].join('.');
+  const encodedPayload =
+    typeof fullPayload === "string"
+      ? fullPayload
+      : encodeBase64url(JSON.stringify(fullPayload));
+  const signingInput: string = [
+    encodeBase64url(JSON.stringify(header)),
+    encodedPayload,
+  ].join(".");
 
   res.send(signingInput);
+});
+
+router.post("/import", async (req, res, next) => {
+  try {
+    const jwt: string = req.body.jwt;
+    const credential = normalizeCredential(jwt);
+    await agent.dataStoreSaveVerifiableCredential({
+      verifiableCredential: credential
+    })
+
+    res.send("success");
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.delete("/:hash", async (req, res, next) => {

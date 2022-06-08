@@ -1,7 +1,10 @@
-import type { IIdentifier, IKey } from '@veramo/core';
+import type { DIDResolutionResult, IIdentifier, IKey } from '@veramo/core';
+import { VerificationMethod } from 'did-resolver';
 import express from 'express';
-const router = express.Router();
+import { EthrDID } from 'ethr-did'
 import { agent } from '../agent/setup';
+
+const router = express.Router();
 
 router.get('/', async (_, res) => {
   const identifiers = await agent.didManagerFind();
@@ -11,6 +14,27 @@ router.get('/', async (_, res) => {
 router.get('/:did', async (req, res) => {
   const identifier: IIdentifier = await agent.didManagerGet({
     did: req.params.did
+  });
+
+  const internalKeys = identifier.keys.map(key => key.kid);
+  console.log(internalKeys);
+
+  const resolutionResult: DIDResolutionResult = await agent.resolveDid({
+    didUrl: req.params.did
+  });
+
+  const verificationMethods = resolutionResult.didDocument?.verificationMethod as VerificationMethod[];
+  const filteredVerificationMethods = verificationMethods.slice(2);
+  const pubKeyList = filteredVerificationMethods.map((method) => method.publicKeyHex) as string[];
+  pubKeyList.forEach(pubKey => {
+    if (!internalKeys.includes(pubKey)) {
+      identifier.keys.push({
+        kid: pubKey,
+        kms: 'external',
+        publicKeyHex: pubKey,
+        type: 'Secp256k1'
+      })
+    }
   })
 
   res.send(identifier)

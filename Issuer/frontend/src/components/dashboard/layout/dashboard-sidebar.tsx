@@ -72,7 +72,7 @@ const getSections = (): Section[] => [
           },
           {
             title: 'Import',
-            path: 'dashboard/credentials/import'
+            path: '/dashboard/credentials/import'
           }
         ]
       },
