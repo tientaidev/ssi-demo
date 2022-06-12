@@ -1,0 +1,11 @@
+@startuml createKey
+
+title  Create Key\n
+
+start
+:Generate random bytes;
+:Convert ramdom bytes to privateKeyHex;
+:Save  key;
+stop
+
+@enduml

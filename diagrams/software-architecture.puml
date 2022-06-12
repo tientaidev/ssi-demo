@@ -1,0 +1,38 @@
+@startuml software-architecture
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/nodejs.puml
+!include DEVICONS/react.puml
+
+Person(issuer, "Issuer", "Entity that issue VCs")
+Person(verifier, "Verifier", "Entity that verifies VCs and VPs")
+Person(holder, "Holder", "Entity that receives VCs")
+
+Container(issuerPage, "Issuer dashboard", "Next", "The interface that the issuer interacts with", $sprite="react")
+Container(verifierPage, "Verifier page", "Next", "The interface that verifier implements", $sprite="react")
+Container(holderPage, "Holder dashboard", "Next", "The interface that holder interacts with", $sprite="react")
+Container(issuerApi, "API", "Express", "Handles logics", $sprite="nodejs")
+Container(holderApi, "API", "Express", "Handles logics", $sprite="nodejs")
+ContainerDb(issuerDb, "Database", "Sqlite", "Holds key, credential(s)")
+ContainerDb(holderDb, "Database", "Sqlite", "Holds key, credential(s), presentation(s)")
+Container_Ext(kms, "Key management system", "CLI", "Mange keys")
+Container_Ext(veramo, "Veramo", "Framework")
+Container_Ext(blockchain, "Blockchain", "Blockchain", $sprite="img:http://cdn-icons-png.flaticon.com/512/1349/1349937.png{scale=0.2}")
+
+
+Rel(issuer, issuerPage, "Uses")
+Rel(issuerPage, issuerApi, "Uses")
+Rel(issuerApi, issuerDb, "Reads/Writes")
+Rel(holder, holderPage, "Uses")
+Rel(holderPage, holderApi, "Uses")
+Rel(holderApi, holderDb, "Reads/Writes")
+Rel(verifier, verifierPage, "Implements")
+Rel(issuer, kms, "Uses")
+Rel(holder, kms, "Uses")
+Rel(issuerApi, veramo, "Uses")
+Rel(holderApi, veramo, "Uses")
+Rel(verifierPage, veramo, "Uses")
+Rel(veramo, blockchain, "Reads/Writes")
+
+SHOW_LEGEND()
+@enduml

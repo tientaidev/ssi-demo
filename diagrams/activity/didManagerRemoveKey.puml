@@ -1,0 +1,17 @@
+@startuml didManagerRemoveKey
+
+title  Remove key from DID\n
+
+start
+  :Input **IDIDManagerRemoveKeyArgs**;
+  note right
+  {
+    did: string,
+    key: IKey,
+    options?: object
+  }
+  end note
+  :Get **publicKeyHex** from key;
+  :Create revoke transaction with value of mentioned **publicKeyHex**;
+  :Send transaction to blockchain;
+stop

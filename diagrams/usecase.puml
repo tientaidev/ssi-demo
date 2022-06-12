@@ -1,0 +1,40 @@
+@startuml usecase
+left to right direction
+actor "Issuer" as issuer
+actor "Verifier" as verifier
+actor "Holder" as holder
+rectangle SSI_SYSTEM {
+  usecase "Create Identifier(s)" as CREATE_DID
+  usecase "Issue Credential(s)" as ISSUE_VC
+  usecase "Issue Presentation(s)" as ISSUE_VP
+  usecase "Verify Credential(s)" as VERIFY_VC
+  usecase "Verify Presentation(s)" as VERIFY_VP
+  usecase "Add key(s) to Identifier" as ADD_KEY_DID
+  usecase "Remove key(s) from Identifier" as REMOVE_KEY_DID
+  usecase "Import Credential(s)" as IMPORT_VC
+  usecase "Generate signing input" as GENERATE_INPUT 
+  usecase "Generate new key(s)" as GENERATE_KEYS
+  usecase "Delete key(s)" as DELETE_KEYS
+}
+issuer --> (CREATE_DID)
+issuer --> ISSUE_VC
+issuer --> ADD_KEY_DID
+issuer --> REMOVE_KEY_DID 
+issuer --> GENERATE_INPUT
+issuer --> GENERATE_KEYS
+issuer --> DELETE_KEYS
+
+verifier --> VERIFY_VC
+verifier --> VERIFY_VP
+
+CREATE_DID <-- holder
+ADD_KEY_DID <-- holder
+REMOVE_KEY_DID <-- holder 
+GENERATE_INPUT <-- holder 
+GENERATE_KEYS <-- holder 
+DELETE_KEYS <-- holder 
+IMPORT_VC <-- holder
+ISSUE_VP <-- holder
+
+
+@enduml

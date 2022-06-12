@@ -1,0 +1,15 @@
+@startuml createKey
+skinparam sequenceMessageAlign right
+actor User as user 
+participant CLI as cli
+participant Controller as controller
+database Database as db
+
+user -> cli++: Create key
+cli -> controller++: Create key request
+controller -> controller: Create key
+controller -> db++: Insert key 
+db --> controller: Return key
+controller --> cli: Return key 
+cli --> user: Display key
+@enduml

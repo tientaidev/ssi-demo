@@ -1,0 +1,20 @@
+@startuml didManagerAddKey
+skinparam sequenceMessageAlign right
+actor User as user 
+participant UI as ui
+participant Controller as controller
+database Database as db
+database Blockchain as blockchain
+
+user -> ui++: Add key to DID
+ui -> controller++: Create add key to DID Request
+controller -> db++: Find DID
+db --> controller: Return DID
+controller -> controller: Create transaction
+controller -> blockchain++: Publish transaction
+blockchain --> controller --: Return transaction hash
+controller -> db: Update DID
+db --> controller --: Return updated DID
+controller --> ui: Return DID
+ui --> user: Display DID
+@enduml

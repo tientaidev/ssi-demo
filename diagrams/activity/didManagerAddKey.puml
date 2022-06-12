@@ -1,0 +1,17 @@
+@startuml didManagerAddKey
+
+title  Add key to DID\n
+
+start
+  :Input **IDIDManagerAddKeyArgs**;
+  note right
+  {
+    did: string,
+    key: IKey,
+    options?: object
+  }
+  end note
+  :Get **publicKeyHex** from key;
+  :Create transaction with value of mentioned **publicKeyHex**;
+  :Send transaction to blockchain;
+stop

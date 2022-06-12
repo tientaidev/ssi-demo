@@ -1,0 +1,17 @@
+@startuml didManagerCreate
+skinparam sequenceMessageAlign right
+actor User as user 
+participant UI as ui
+participant Controller as controller
+database Database as db
+
+user -> ui++: Create DID
+ui -> controller++: Create DID Request
+controller -> db++: Insert new key
+db --> controller: Return created key
+controller -> controller: Map created key to DID
+controller -> db: Insert DID
+db --> controller --: Return DID
+controller --> ui: Return DID
+ui --> user: Display DID
+@enduml

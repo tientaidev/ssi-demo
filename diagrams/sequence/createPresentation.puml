@@ -1,0 +1,20 @@
+@startuml createPresentation
+skinparam sequenceMessageAlign right
+actor User as user 
+participant UI as ui
+participant Controller as controller
+database Database as db
+
+user -> ui++: Create Presentation
+ui -> controller++: Create **create Presentation request**
+controller -> db++: Find holder DID
+db --> controller: Return holder DID
+controller -> controller: Create JWT
+controller -> controller: Normalize Credential
+controller -> db: Insert Presentation
+deactivate db
+controller --> ui: Return Presentation
+deactivate controller
+ui --> user: Display Presentation
+
+@enduml

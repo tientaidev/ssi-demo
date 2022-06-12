@@ -1,0 +1,14 @@
+@startuml deleteKey
+skinparam sequenceMessageAlign right
+actor User as user 
+participant CLI as cli
+participant Controller as controller
+database Database as db
+
+user -> cli++: Delete key
+cli -> controller++: Create delete key request
+controller -> db++: Delete key 
+db --> controller: Return success
+controller --> cli: Return success 
+cli --> user: Display success
+@enduml

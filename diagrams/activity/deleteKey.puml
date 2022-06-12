@@ -1,0 +1,11 @@
+@startuml deleteKey
+
+title  Delete Key\n
+
+start
+:Find key;
+:Convert ramdom bytes to privateKeyHex;
+:Save  key;
+stop
+
+@enduml
