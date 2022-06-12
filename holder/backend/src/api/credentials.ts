@@ -3,6 +3,7 @@ import { UniqueVerifiableCredential } from "@veramo/data-store";
 import { agent } from "../agent/setup";
 import { VeramoDatabase } from "../db/db";
 import express from "express";
+import { normalizeCredential } from "did-jwt-vc";
 
 const router = express.Router();
 const db = new VeramoDatabase();
@@ -11,20 +12,6 @@ router.get("/", async (_, res, next) => {
   try {
     const credentials: UniqueVerifiableCredential[] =
       await agent.dataStoreORMGetVerifiableCredentials();
-    const identifiers: IIdentifier[] = await agent.didManagerFind();
-
-    let mappings = new Map<string, string>();
-    identifiers.forEach((identifier) =>
-      mappings.set(identifier.did, identifier.alias || "")
-    );
-
-    credentials.map(
-      (credential) => {
-        let issuer = credential.verifiableCredential.issuer;
-        issuer.alias = mappings.get(issuer.id);
-        return credential;
-      }
-    );
 
     res.send(credentials);
   } catch (err) {
@@ -66,6 +53,20 @@ router.post("/", async (req, res, next) => {
         proofFormat: "jwt",
       });
     res.send({ credential });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/import", async (req, res, next) => {
+  try {
+    const jwt: string = req.body.jwt;
+    const credential = normalizeCredential(jwt);
+    await agent.dataStoreSaveVerifiableCredential({
+      verifiableCredential: credential
+    })
+
+    res.send("success");
   } catch (err) {
     next(err);
   }

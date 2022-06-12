@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Home as HomeIcon } from '../../../icons/home';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import { PermIdentity, PresentToAll, VerifiedUser } from '@mui/icons-material'
-import { Scrollbar } from '../../scrollbar';
+import { Scrollbar } from 'src/components/misc/scrollbar';
 import { DashboardSidebarSection } from './dashboard-sidebar-section';
 import type { FC } from 'react';
 import type { Theme } from '@mui/material';
@@ -67,12 +67,8 @@ const getSections = (): Section[] => [
             path: '/dashboard/credentials'
           },
           {
-            title: 'Issue',
-            path: '/dashboard/credentials/new'
-          },
-          {
             title: 'Import',
-            path: '/dashboard/identifiers/import'
+            path: '/dashboard/credentials/import'
           }
         ]
       },
@@ -87,7 +83,7 @@ const getSections = (): Section[] => [
           },
           {
             title: 'Issue',
-            path: '/dashboard/credentials/new'
+            path: '/dashboard/presentations/new'
           }
         ]
       }

@@ -9,13 +9,13 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import type { AppBarProps } from '@mui/material';
-import { Menu as MenuIcon } from '../../icons/menu';
+import { Menu as MenuIcon } from '../../../icons/menu';
 import {
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon
 } from '@mui/icons-material';
-import type { Settings } from '../../contexts/settings-context';
-import { useSettings } from '../../hooks/use-settings';
+import type { Settings } from '../../../contexts/settings-context';
+import { useSettings } from '../../../hooks/use-settings';
 
 interface DashboardNavbarProps extends AppBarProps {
   onOpenSidebar?: () => void;

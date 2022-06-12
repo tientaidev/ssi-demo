@@ -19,18 +19,17 @@ import {
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material/styles';
-import { SeverityPill } from '../../severity-pill'
+import { SeverityPill } from 'src/components/misc/severity-pill';
 import { Plus as PlusIcon } from '../../../icons/plus';;
 import { Close as CloseIcon, Edit as EditIcon, ArrowUpward as ArrowUpwardIcon, AddLink as AddLinkIcon } from '@mui/icons-material';
 import Link from '@mui/material/Link';
 import { X as XIcon } from '../../../icons/x';
-import { PropertyList } from '../../property-list';
+import { PropertyList } from 'src/components/misc/property-list';
 import { PropertyListItem } from '../../misc/property-list-item';
 import type { IIdentifier } from '@veramo/core';
-import { Scrollbar } from '../../scrollbar';
+import { Scrollbar } from 'src/components/misc/scrollbar';
 import { truncate } from '../../../utils/truncate';
-import { computeAddress } from '@ethersproject/transactions'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { computeAddress } from '@ethersproject/transactions';
 
 interface IdentifierDrawerProps {
   containerRef?: MutableRefObject<HTMLDivElement | null>;
