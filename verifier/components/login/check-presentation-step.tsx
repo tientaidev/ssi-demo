@@ -28,7 +28,7 @@ interface Condition {
   valid: boolean;
 }
 
-export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
+export const CheckPresentationStep: FC<JobDetailsStepProps> = (props) => {
   const { onBack, onNext, jwt, domain, challenge, ...other } = props;
   const [conditions, setConditions] = useState<Condition[]>([
     {
@@ -60,7 +60,6 @@ export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
 
     async function verifyChallengeAndDomain() {
       const { payload, header, signature, data } = decodeJWT(jwt);
-      console.log(payload);
     }
 
     if (jwt) {
@@ -104,7 +103,7 @@ export const JobDetailsStep: FC<JobDetailsStepProps> = (props) => {
   );
 };
 
-JobDetailsStep.propTypes = {
+CheckPresentationStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func,
   jwt: PropTypes.string.isRequired,

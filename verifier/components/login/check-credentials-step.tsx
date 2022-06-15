@@ -16,7 +16,7 @@ interface JobDescriptionStepProps {
   onNext?: () => void;
 }
 
-export const JobDescriptionStep: FC<JobDescriptionStepProps> = (props) => {
+export const CheckCredentialsStep: FC<JobDescriptionStepProps> = (props) => {
   const { onBack, onNext, ...other } = props;
   const [content, setContent] = useState<string>('');
 
@@ -70,7 +70,7 @@ export const JobDescriptionStep: FC<JobDescriptionStepProps> = (props) => {
   );
 };
 
-JobDescriptionStep.propTypes = {
+CheckCredentialsStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func
 };

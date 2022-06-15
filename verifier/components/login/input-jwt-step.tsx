@@ -13,7 +13,7 @@ interface JobCategoryStepProps {
   challenge: string;
 }
 
-export const JobCategoryStep: FC<JobCategoryStepProps> = (props) => {
+export const InputJWTStep: FC<JobCategoryStepProps> = (props) => {
   const { onNext, handleSetJwt, domain, challenge, ...other } = props;
   const [jwt, setJwt] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -80,7 +80,7 @@ export const JobCategoryStep: FC<JobCategoryStepProps> = (props) => {
   );
 };
 
-JobCategoryStep.propTypes = {
+InputJWTStep.propTypes = {
   onNext: PropTypes.func.isRequired,
   handleSetJwt: PropTypes.func.isRequired,
   domain: PropTypes.string.isRequired,
