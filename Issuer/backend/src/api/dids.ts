@@ -61,7 +61,7 @@ router.post("/", async (req, res, next) => {
 router.post("/add-key", async (req, res, next) => {
   try {
     const key: IKey = {
-      kms: "external",
+      kms: 'local',
       publicKeyHex: req.body.publicKeyHex,
       kid: req.body.publicKeyHex,
       type: "Secp256k1",
