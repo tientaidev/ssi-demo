@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import type { NextPage } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
