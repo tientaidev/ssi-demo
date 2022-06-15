@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { Layout } from '../components/layout';
 import type { StepIconProps } from '@mui/material';
-import { JobCategoryStep } from '../components/login/job-category-step';
-import { JobDetailsStep } from '../components/login/job-details-step';
-import { JobDescriptionStep } from '../components/login/job-description-step';
+import { InputJWTStep } from '../components/login/input-jwt-step';
+import { CheckCredentialsStep } from '../components/login/check-credentials-step';
+import { CheckPresentationStep } from '../components/login/check-presentation-step';
 import { Check as CheckIcon } from '../icons/check';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,7 +75,7 @@ const JobCreate: NextPage = () => {
     {
       label: 'Input Presentation',
       content: (
-        <JobCategoryStep
+        <InputJWTStep
           onNext={handleNext}
           handleSetJwt={handleSetJwt}
           domain={domain}
@@ -86,7 +86,7 @@ const JobCreate: NextPage = () => {
     {
       label: 'Check holder of Presentation',
       content: (
-        <JobDetailsStep
+        <CheckPresentationStep
           onBack={handleBack}
           onNext={handleNext}
           jwt={jwt}
@@ -98,16 +98,7 @@ const JobCreate: NextPage = () => {
     {
       label: 'Check credentials',
       content: (
-        <JobDescriptionStep
-          onBack={handleBack}
-          onNext={handleComplete}
-        />
-      )
-    },
-    {
-      label: 'Description',
-      content: (
-        <JobDescriptionStep
+        <CheckCredentialsStep
           onBack={handleBack}
           onNext={handleComplete}
         />

@@ -74,7 +74,7 @@ export const CredentialListTable: FC<CredentialListTableProps> = (props) => {
                     {new Date(credential.verifiableCredential.issuanceDate).toDateString()}
                   </TableCell>
                   <TableCell>
-                    {credential.verifiableCredential.expirationDate}
+                    {credential.verifiableCredential.expirationDate || 'Not set'}
                   </TableCell>
                   <TableCell>
                     {credential.verifiableCredential.issuer.alias}
