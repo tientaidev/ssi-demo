@@ -21,7 +21,8 @@ import {
 } from '@mui/material';
 import { IIdentifier } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
-import { UniqueVerifiableCredential } from '@veramo/data-store';
+import type { UniqueVerifiableCredential } from '@veramo/data-store';
+import type { ICreateVerifiablePresentationArgs } from "@veramo/credential-w3c";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -57,16 +58,31 @@ export const PresentationCreateForm: FC = (props) => {
     }),
     onSubmit: async (values, helpers): Promise<void> => {
       try {
-        // NOTE: Make API request
-        const response: Response = await fetch('http://localhost:5000/credentials', {
+        const body: ICreateVerifiablePresentationArgs = {
+          presentation: {
+            verifiableCredential: selectedCredentials,
+            holder: values.holder,
+            name: values.name,
+            description: values.description
+          },
+          save: true,
+          proofFormat: 'jwt'
+        }
+
+        const response: Response = await fetch('http://localhost:5001/presentations', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(values)
+          body: JSON.stringify(body)
         });
 
-        toast.success('Credential created!');
+        if (response.status === 200) {
+          toast.success('Credential created!');
+        } else {
+          toast.error('Something went wrong!');
+        }
+
         router.push('/dashboard/credentials').catch(console.error);
       } catch (err) {
         console.error(err);
@@ -113,7 +129,7 @@ export const PresentationCreateForm: FC = (props) => {
     getCredentials();
   },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [credentials, identifiers]
+    []
   );
 
   return (
@@ -296,7 +312,7 @@ export const PresentationCreateForm: FC = (props) => {
                   sx={{ mt: 2 }}
                 >
                   {
-                  identifiers.find((identifier) => identifier.did === formik.values.holder).keys.map((key) => (
+                  identifiers.find((identifier) => identifier.did === formik.values.holder)?.keys.map((key) => (
                     <MenuItem
                       key={key.kid}
                       value={key.kid}

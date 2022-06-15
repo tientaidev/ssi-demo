@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import type { ChangeEvent, MouseEvent } from 'react';
 import toast from 'react-hot-toast';
 import NextLink from 'next/link';
@@ -13,26 +13,32 @@ import {
   Typography
 } from '@mui/material'; ``
 import { DashboardLayout } from '../../../components/dashboard/layout/dashboard-layout';
-import { CredentialListTable } from '../../../components/dashboard/credential/credential-list-table';
+import { PresentationListTable } from 'src/components/dashboard/presentation/presentation-list-table';
 import { Plus as PlusIcon } from '../../../icons/plus';
-import type { UniqueVerifiableCredential } from '@veramo/data-store';
+import type { UniqueVerifiablePresentation } from '@veramo/data-store';
 
 const applyPagination = (
-  credentials: UniqueVerifiableCredential[],
+  presentations: UniqueVerifiablePresentation[],
   page: number,
   rowsPerPage: number
-): UniqueVerifiableCredential[] => credentials.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+): UniqueVerifiablePresentation[] => presentations.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const CredentialList: NextPage = () => {
-  const [credentials, setCredentials] = useState<UniqueVerifiableCredential[]>([]);
+const PresentationList: NextPage = () => {
+  const [presentations, setPresentations] = useState<UniqueVerifiablePresentation[]>([]);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
-  const getCredentials = async () => {
+  const getPresentations = async () => {
     try {
-      const response: Response = await fetch('http://localhost:5001/credentials');
+      const response: Response = await fetch('http://localhost:5001/presentations');
+
+      if (response.status !== 200) {
+        toast.error('Error when fetching data!');
+        return;
+      }
+
       const data = await response.json();
-      setCredentials(data);
+      setPresentations(data);
     } catch (err) {
       toast.error(err);
     }
@@ -41,7 +47,7 @@ const CredentialList: NextPage = () => {
 
   useEffect(
     () => {
-      getCredentials();
+      getPresentations();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -55,7 +61,7 @@ const CredentialList: NextPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const paginatedCredentials = applyPagination(credentials, page, rowsPerPage);
+  const paginatedPresentations = applyPagination(presentations, page, rowsPerPage);
 
   return (
     <>
@@ -100,9 +106,9 @@ const CredentialList: NextPage = () => {
             </Grid>
           </Box>
           <Card>
-            <CredentialListTable
-              credentials={paginatedCredentials}
-              credentialsCount={credentials.length}
+            <PresentationListTable
+              presentations={paginatedPresentations}
+              presentationsCount={presentations.length}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               rowsPerPage={rowsPerPage}
@@ -115,10 +121,10 @@ const CredentialList: NextPage = () => {
   );
 };
 
-CredentialList.getLayout = (page) => (
+PresentationList.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default CredentialList;
+export default PresentationList;
