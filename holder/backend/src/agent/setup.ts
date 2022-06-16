@@ -17,9 +17,6 @@ import { DIDManager } from "@veramo/did-manager";
 // Ethr did identity provider
 import { EthrDIDProvider } from "@veramo/did-provider-ethr";
 
-// Web did identity provider
-import { WebDIDProvider } from "@veramo/did-provider-web";
-
 // Core key manager plugin
 import { KeyManager } from "@veramo/key-manager";
 
@@ -52,11 +49,7 @@ import {
   ICredentialIssuer,
   W3cMessageHandler,
 } from "@veramo/credential-w3c";
-import {
-  ISelectiveDisclosure,
-  SdrMessageHandler,
-  SelectiveDisclosure,
-} from "@veramo/selective-disclosure";
+
 import {
   DIDCommMessageHandler,
   IDIDComm,
@@ -90,7 +83,6 @@ export const agent = createAgent<
   IDataStoreORM &
   IResolver &
   ICredentialIssuer &
-  ISelectiveDisclosure &
   IDIDComm &
   IMessageHandler
 >({
@@ -111,10 +103,7 @@ export const agent = createAgent<
           defaultKms: "local",
           network: "rinkeby",
           rpcUrl: "https://rinkeby.infura.io/v3/" + INFURA_PROJECT_ID,
-        }),
-        "did:web": new WebDIDProvider({
-          defaultKms: "local",
-        }),
+        })
       },
     }),
     new DIDResolverPlugin({
@@ -127,11 +116,9 @@ export const agent = createAgent<
         new DIDCommMessageHandler(),
         new JwtMessageHandler(),
         new W3cMessageHandler(),
-        new SdrMessageHandler(),
       ],
     }),
     new CredentialIssuer(),
-    new SelectiveDisclosure(),
     new DataStore(dbConnection),
     new DataStoreORM(dbConnection),
   ],
