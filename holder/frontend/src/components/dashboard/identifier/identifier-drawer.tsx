@@ -2,6 +2,7 @@ import { SyntheticEvent, useState, useCallback, useEffect } from 'react';
 import type { FC, MutableRefObject } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import NextLink from 'next/link';
 import {
   Box,
@@ -15,13 +16,14 @@ import {
   TableHead,
   TableRow,
   TextField, Theme,
-  Typography, useMediaQuery
+  Typography, useMediaQuery,
+  InputAdornment
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material/styles';
 import { SeverityPill } from 'src/components/misc/severity-pill';
 import { Plus as PlusIcon } from '../../../icons/plus';;
-import { Close as CloseIcon, Edit as EditIcon, ArrowUpward as ArrowUpwardIcon, AddLink as AddLinkIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Edit as EditIcon, ArrowUpward as ArrowUpwardIcon, AddLink as AddLinkIcon, ContentCopy as ContentCopyIcon } from '@mui/icons-material';
 import Link from '@mui/material/Link';
 import { X as XIcon } from '../../../icons/x';
 import { PropertyList } from 'src/components/misc/property-list';
@@ -111,6 +113,16 @@ const IdentifierPreview: FC<IdentifierPreviewProps> = (props) => {
           disableGutters
           label="ID"
           value={truncate(identifier.did)}
+          secondaryAction={
+            <CopyToClipboard
+              text={identifier.did}
+              onCopy={() => toast.success('Sucessfully copied did')}
+            >
+              <IconButton edge="end">
+                <ContentCopyIcon />
+              </IconButton>
+            </CopyToClipboard>
+          }
         />
         <PropertyListItem
           align={align}
