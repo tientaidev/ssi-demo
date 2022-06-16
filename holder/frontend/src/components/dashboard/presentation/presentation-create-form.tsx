@@ -78,12 +78,12 @@ export const PresentationCreateForm: FC = (props) => {
         });
 
         if (response.status === 200) {
-          toast.success('Credential created!');
+          toast.success('Presentation created!');
         } else {
           toast.error('Something went wrong!');
         }
 
-        router.push('/dashboard/credentials').catch(console.error);
+        router.push('/dashboard/presentations').catch(console.error);
       } catch (err) {
         console.error(err);
         toast.error('Something went wrong!');
@@ -249,7 +249,7 @@ export const PresentationCreateForm: FC = (props) => {
                 {credentials && credentials.map((credential) => (
                   <MenuItem key={credential.hash} value={credential.verifiableCredential.proof.jwt}>
                     <Checkbox checked={selectedCredentials.includes(credential.verifiableCredential.proof.jwt)} />
-                    <ListItemText primary={credential.verifiableCredential.name} />
+                    <ListItemText primary={`${credential.verifiableCredential.name} - ${truncate(credential.verifiableCredential.issuer.id)}`} />
                   </MenuItem>
                 ))}
               </Select>

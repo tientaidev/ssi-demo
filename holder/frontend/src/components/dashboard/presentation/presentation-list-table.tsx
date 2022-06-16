@@ -83,7 +83,7 @@ export const PresentationListTable: FC<PresentationListTableProps> = (props) => 
                   <TableCell align="right">
                     <CopyToClipboard 
                       text={presentation.verifiablePresentation.proof.jwt}
-                      onCopy={() => toast.success('Sucessfully copied credential')}
+                      onCopy={() => toast.success('Sucessfully copied presentation')}
                     >
                       <IconButton component="a">
                         <ContentCopyIcon fontSize="small" />
@@ -91,7 +91,7 @@ export const PresentationListTable: FC<PresentationListTableProps> = (props) => 
                     </CopyToClipboard>
                     
                     <NextLink
-                      href={`/dashboard/credentials/${presentation.hash}`}
+                      href={`/dashboard/presentations/${presentation.hash}`}
                       passHref
                     >
                       <IconButton component="a">

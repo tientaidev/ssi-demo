@@ -21,4 +21,17 @@ export class VeramoDatabase {
         if (db !== undefined) await db.close();
       }
     }
+
+    async deletePresentation(hash: string): Promise<boolean> {
+      let db;
+      try {
+        db = await this.openDb();
+        await db.exec(`DELETE FROM presentation WHERE hash='${hash}'`);
+        return true;
+      } catch (error) {
+        return error as any;
+      } finally {
+        if (db !== undefined) await db.close();
+      }
+    }
   }
