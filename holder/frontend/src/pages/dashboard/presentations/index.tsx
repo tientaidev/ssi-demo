@@ -67,7 +67,7 @@ const PresentationList: NextPage = () => {
     <>
       <Head>
         <title>
-          Dashboard: Credential List
+          Dashboard: Presentation List
         </title>
       </Head>
       <Box

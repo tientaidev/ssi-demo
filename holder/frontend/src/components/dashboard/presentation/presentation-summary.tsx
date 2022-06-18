@@ -63,6 +63,12 @@ export const PresentationSummary: FC<PresentationDetailsProps> = (props) => {
             value={presentation.description}
           />
           <Divider />
+          <PropertyListItem
+            align={align}
+            label="Challenge"
+            value={presentation.challenge}
+          />
+          <Divider />
         </PropertyList>
       </Card>
 
@@ -72,7 +78,7 @@ export const PresentationSummary: FC<PresentationDetailsProps> = (props) => {
             sx={{ mt: 3 }}
             key={index + 1}
           >
-            <CardHeader title={`Verifiable Credential ${index + 1}`} />
+            <CardHeader title={`Verifiable Credential ${index + 1}`} key={index + 1} />
             <Divider />
             <PropertyList>
               <PropertyListItem
@@ -91,6 +97,12 @@ export const PresentationSummary: FC<PresentationDetailsProps> = (props) => {
                 align={align}
                 label="Course"
                 value={credential.credentialSubject.course}
+              />
+              <Divider />
+              <PropertyListItem
+                align={align}
+                label="Issuer DID"
+                value={truncate(credential.issuer.id as string)}
               />
               <Divider />
             </PropertyList>

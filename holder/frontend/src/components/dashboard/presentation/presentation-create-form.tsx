@@ -337,7 +337,7 @@ export const PresentationCreateForm: FC = (props) => {
         }}
       >
         <NextLink
-          href='/dashboard/credentials'
+          href='/dashboard/presentations'
           passHref
         >
           <Button

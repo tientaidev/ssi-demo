@@ -62,7 +62,7 @@ const CredentialDetails: NextPage = () => {
         <Container maxWidth="md">
           <Box sx={{ mb: 4 }}>
             <NextLink
-              href="/dashboard/credentials"
+              href="/dashboard/presentations"
               passHref
             >
               <Link
@@ -78,7 +78,7 @@ const CredentialDetails: NextPage = () => {
                   sx={{ mr: 1 }}
                 />
                 <Typography variant="subtitle2">
-                  Credentials
+                  Presentations
                 </Typography>
               </Link>
             </NextLink>
