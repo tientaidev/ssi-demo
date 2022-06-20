@@ -1,4 +1,4 @@
-@startuml verifyCredential
+@startuml verifyPresentation
 skinparam sequenceMessageAlign right
 actor User as user 
 participant UI as ui
@@ -6,7 +6,12 @@ participant Controller as controller
 database Blockchain as blockchain
 
 user -> ui++: verify Presentation
-ui -> controller++: verify Presentation request
+activate controller
+controller --> ui: Generate challenge
+controller --> ui: Generate domain
+ui --> user: Display requirements
+user -> ui: Input presentation
+ui -> controller: verify Presentation request
 controller -> controller: Get proof from presentation
 controller -> blockchain++: Resolve DID
 blockchain --> controller: Return DID Document
