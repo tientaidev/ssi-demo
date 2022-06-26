@@ -13,7 +13,7 @@ import {
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Scrollbar } from '../../misc/scrollbar';
-import type { UniqueVerifiablePresentation } from '@veramo/data-store';
+import type { UniqueVerifiablePresentation } from '@veramo/core';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-hot-toast';
 import { truncate } from 'src/utils/truncate';
@@ -51,7 +51,7 @@ export const PresentationListTable: FC<PresentationListTableProps> = (props) => 
                 Issuance Date
               </TableCell>
               <TableCell>
-                Expiration Date
+                Challenge
               </TableCell>
               <TableCell>
                 Holder
@@ -75,7 +75,7 @@ export const PresentationListTable: FC<PresentationListTableProps> = (props) => 
                     {new Date(presentation.verifiablePresentation.issuanceDate as string).toDateString()}
                   </TableCell>
                   <TableCell>
-                    {presentation.verifiablePresentation.expirationDate || 'Not set'}
+                    {presentation.verifiablePresentation.nonce || 'Not set'}
                   </TableCell>
                   <TableCell>
                     {truncate(presentation.verifiablePresentation.holder)}

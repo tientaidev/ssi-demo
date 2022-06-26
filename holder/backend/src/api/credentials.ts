@@ -1,5 +1,4 @@
-import { IIdentifier, VerifiableCredential } from "@veramo/core";
-import { UniqueVerifiableCredential } from "@veramo/data-store";
+import { VerifiableCredential, UniqueVerifiableCredential } from "@veramo/core";
 import { agent } from "../agent/setup";
 import { VeramoDatabase } from "../db/db";
 import express from "express";
@@ -25,34 +24,7 @@ router.get("/:hash", async (req, res, next) => {
       hash: req.params.hash
     });
 
-    credential.issuer.alias = await agent.didManagerGet({
-      did: credential.issuer.id
-    }).then(did => did.alias)
-
     res.send(credential);
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post("/", async (req, res, next) => {
-  try {
-    const credential: VerifiableCredential =
-      await agent.createVerifiableCredential({
-        credential: {
-          name: req.body.name,
-          description: req.body.description,
-          issuer: req.body.issuer,
-          credentialSubject: {
-            id: req.body.subjectDid,
-            name: req.body.subjectName,
-            course: req.body.course,
-          },
-        },
-        save: true,
-        proofFormat: "jwt",
-      });
-    res.send({ credential });
   } catch (err) {
     next(err);
   }

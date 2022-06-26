@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import { IIdentifier } from '@veramo/core';
 import { truncate } from '../../../utils/truncate';
-import type { UniqueVerifiableCredential } from '@veramo/data-store';
+import type { UniqueVerifiableCredential } from '@veramo/core';
 import type { ICreateVerifiablePresentationArgs } from "@veramo/credential-w3c";
 
 const ITEM_HEIGHT = 48;
@@ -46,14 +46,14 @@ export const PresentationCreateForm: FC = (props) => {
       name: '',
       description: '',
       holder: '',
-      keySigned: '',
       challenge: '',
+      keyRef: '',
       submit: null
     },
     validationSchema: Yup.object({
       description: Yup.string().max(5000).required(),
       name: Yup.string().max(255).required(),
-      keySigned: Yup.string().max(130).required(),
+      keyRef: Yup.string().max(130).required(),
       challenge: Yup.string().required(),
     }),
     onSubmit: async (values, helpers): Promise<void> => {
@@ -66,6 +66,7 @@ export const PresentationCreateForm: FC = (props) => {
             description: values.description
           },
           save: true,
+          challenge: values.challenge,
           proofFormat: 'jwt'
         }
 
@@ -246,8 +247,8 @@ export const PresentationCreateForm: FC = (props) => {
                 renderValue={selected => selected.join(', ')}
                 MenuProps={MenuProps}
               >
-                {credentials && credentials.map((credential) => (
-                  <MenuItem key={credential.hash} value={credential.verifiableCredential.proof.jwt}>
+                {credentials && credentials.map((credential, index) => (
+                  <MenuItem key={index} value={credential.verifiableCredential.proof.jwt}>
                     <Checkbox checked={selectedCredentials.includes(credential.verifiableCredential.proof.jwt)} />
                     <ListItemText primary={`${credential.verifiableCredential.name} - ${truncate(credential.verifiableCredential.issuer.id)}`} />
                   </MenuItem>
@@ -301,14 +302,14 @@ export const PresentationCreateForm: FC = (props) => {
               {
                 formik.values.holder &&
                 <TextField
-                  error={Boolean(formik.touched.keySigned && formik.errors.keySigned)}
+                  error={Boolean(formik.touched.keyRef && formik.errors.keyRef)}
                   fullWidth
-                  label="Key"
-                  name="keySigned"
+                  label="Keyref"
+                  name="keyRef"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   select
-                  value={formik.values.keySigned}
+                  value={formik.values.keyRef}
                   sx={{ mt: 2 }}
                 >
                   {

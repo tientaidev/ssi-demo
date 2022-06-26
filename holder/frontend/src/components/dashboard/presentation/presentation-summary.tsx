@@ -122,12 +122,6 @@ export const PresentationSummary: FC<PresentationDetailsProps> = (props) => {
             value={truncate(presentation.holder)}
           />
           <Divider />
-          {/* <PropertyListItem
-            align={align}
-            label="Alias"
-            value={presentation.holder.alias}
-          />
-          <Divider /> */}
         </PropertyList>
       </Card>
       <Card {...other}

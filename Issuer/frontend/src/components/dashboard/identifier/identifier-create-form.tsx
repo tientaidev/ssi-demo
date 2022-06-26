@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -90,12 +91,17 @@ export const IdentifierCreateForm: FC = (props) => {
           mt: 3
         }}
       >
-        <Button
-          sx={{ m: 1 }}
-          variant="outlined"
+        <NextLink
+          href='/dashboard/identifiers'
+          passHref
         >
-          Cancel
-        </Button>
+          <Button
+            sx={{ m: 1 }}
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+        </NextLink>
         <Button
           sx={{ m: 1 }}
           type="submit"

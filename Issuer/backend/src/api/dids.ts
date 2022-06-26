@@ -22,7 +22,6 @@ router.get("/:did", async (req, res) => {
   });
 
   const internalKeys = identifier.keys.map((key) => key.kid);
-  console.log(internalKeys);
 
   const resolutionResult: DIDResolutionResult = await agent.resolveDid({
     didUrl: req.params.did,

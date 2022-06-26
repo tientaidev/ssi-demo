@@ -52,8 +52,7 @@ const JobCreate: NextPage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [complete, setComplete] = useState<boolean>(false);
   const [jwt, setJwt] = useState<string>('');
-  const domain: string = uuidv4();
-  const challenge: string = uuidv4();
+  const [challenge, setChallenge] = useState<string>(uuidv4());
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -78,7 +77,6 @@ const JobCreate: NextPage = () => {
         <InputJWTStep
           onNext={handleNext}
           handleSetJwt={handleSetJwt}
-          domain={domain}
           challenge={challenge}
         />
       )
@@ -90,7 +88,6 @@ const JobCreate: NextPage = () => {
           onBack={handleBack}
           onNext={handleNext}
           jwt={jwt}
-          domain={domain}
           challenge={challenge}
         />
       )
@@ -205,7 +202,7 @@ const JobCreate: NextPage = () => {
                         color="textSecondary"
                         variant="body2"
                       >
-                        You can start studying Artificial Intelligence now
+                        You can start studying PPL now
                       </Typography>
                     </div>
                   )

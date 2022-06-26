@@ -13,7 +13,7 @@ import {
 import { ArrowRight as ArrowRightIcon } from '../../../icons/arrow-right';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Scrollbar } from '../../misc/scrollbar';
-import type { UniqueVerifiableCredential } from '@veramo/data-store';
+import type { UniqueVerifiableCredential } from '@veramo/core';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-hot-toast';
 import { truncate } from 'src/utils/truncate';
