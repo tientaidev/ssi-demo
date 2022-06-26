@@ -30,14 +30,15 @@ start
       * Check if public keys in **authenticators** match public key that signed JWS
     end note
   }
-  :Normalize credential;
-  :Validate credential payload;
+  partition VerifyPresentationPayloadOptions {
+    :Verify challenge;
+    :Verify domain;
+  }
+  :Normalize presentation;
+  :Validate presentation payload;
   note right
     * Validate @context
-    * Vaidate Vc type
-    * Validate credential Subject (length > 0)
-    * Validate issuance Date
-    * Validate expiration Date
+    * Validate VC(s) in VP
   end note
 stop
 

@@ -13,6 +13,7 @@ rectangle SSI_SYSTEM {
   usecase "Remove key(s) from Identifier" as REMOVE_KEY_DID
   usecase "Import Credential(s)" as IMPORT_VC
   usecase "Generate signing input" as GENERATE_INPUT 
+  usecase "Sign generated payload data" as SIGN_PAYLOAD 
   usecase "Generate new key(s)" as GENERATE_KEYS
   usecase "Delete key(s)" as DELETE_KEYS
 }
@@ -23,6 +24,8 @@ issuer --> REMOVE_KEY_DID
 issuer --> GENERATE_INPUT
 issuer --> GENERATE_KEYS
 issuer --> DELETE_KEYS
+issuer --> SIGN_PAYLOAD
+issuer --> IMPORT_VC
 
 verifier --> VERIFY_VC
 verifier --> VERIFY_VP
@@ -30,7 +33,8 @@ verifier --> VERIFY_VP
 CREATE_DID <-- holder
 ADD_KEY_DID <-- holder
 REMOVE_KEY_DID <-- holder 
-GENERATE_INPUT <-- holder 
+GENERATE_INPUT <-- holder
+SIGN_PAYLOAD <-- holder 
 GENERATE_KEYS <-- holder 
 DELETE_KEYS <-- holder 
 IMPORT_VC <-- holder
