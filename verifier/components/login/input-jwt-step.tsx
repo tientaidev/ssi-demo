@@ -6,15 +6,15 @@ import { ArrowRight as ArrowRightIcon } from '../../icons/arrow-right';
 import { agent } from '../../veramo/setup';
 import { decodeJWT } from 'did-jwt'
 
-interface JobCategoryStepProps {
+interface InputJWTStepProps {
   onNext: () => void;
   handleSetJwt: (jwt: string) => void;
-  domain: string;
+  // domain: string;
   challenge: string;
 }
 
-export const InputJWTStep: FC<JobCategoryStepProps> = (props) => {
-  const { onNext, handleSetJwt, domain, challenge, ...other } = props;
+export const InputJWTStep: FC<InputJWTStepProps> = (props) => {
+  const { onNext, handleSetJwt, challenge, ...other } = props;
   const [jwt, setJwt] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -27,8 +27,8 @@ export const InputJWTStep: FC<JobCategoryStepProps> = (props) => {
     try {
       decodeJWT(jwt);
       handleSetJwt(jwt);
-      onNext(); 
-    } catch(error) {
+      onNext();
+    } catch (error) {
       setError((error as Error).message);
     }
   }
@@ -40,13 +40,17 @@ export const InputJWTStep: FC<JobCategoryStepProps> = (props) => {
           '& .MuiTextField-root': { mb: 2 },
         }}
       >
-        <TextField
+        {/* <TextField
           fullWidth
           disabled
           label="Domain"
           name="domain"
           defaultValue={domain}
-        />
+        /> */}
+        <Typography sx={{ mb: 3 }}>
+          To login, we need you to create a VP of your PPL Certificate VC with <b>challenge</b> below.
+          The VC that this VP express must be issued from HCMIU.
+        </Typography>
         <TextField
           fullWidth
           disabled
@@ -83,6 +87,6 @@ export const InputJWTStep: FC<JobCategoryStepProps> = (props) => {
 InputJWTStep.propTypes = {
   onNext: PropTypes.func.isRequired,
   handleSetJwt: PropTypes.func.isRequired,
-  domain: PropTypes.string.isRequired,
+  // domain: PropTypes.string.isRequired,
   challenge: PropTypes.string.isRequired
 };

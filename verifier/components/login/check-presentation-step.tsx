@@ -14,12 +14,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ArrowRight as ArrowRightIcon } from '../../icons/arrow-right';
 import { agent } from '../../veramo/setup';
 import { decodeJWT } from 'did-jwt';
+import { JWTDecoded } from 'did-jwt/lib/JWT';
 
 interface JobDetailsStepProps {
   onNext?: () => void;
   onBack?: () => void;
   jwt: string;
-  domain: string;
+  // domain: string;
   challenge: string;
 }
 
@@ -29,42 +30,49 @@ interface Condition {
 }
 
 export const CheckPresentationStep: FC<JobDetailsStepProps> = (props) => {
-  const { onBack, onNext, jwt, domain, challenge, ...other } = props;
+  const { onBack, onNext, jwt, challenge, ...other } = props;
   const [conditions, setConditions] = useState<Condition[]>([
     {
-      text: 'Holder signature is valid',
+      text: 'Query from blockchain: Holder signature is valid',
       valid: false
     },
     {
-      text: 'Domain is correct',
-      valid: true
-    },
-    {
       text: 'Challenge is correct',
-      valid: true
+      valid: false
     }
   ]);
 
   useEffect(() => {
     async function verifySignature() {
+      console.log(challenge)
       const result: boolean = await agent.verifyPresentation({
         presentation: jwt
       });
+
+      const { payload: vpPayload, header, signature, data }: JWTDecoded = decodeJWT(jwt);
+      const vcJwt = vpPayload.vp.verifiableCredential[0];
+      const { payload: vcPayload, ...rest}: JWTDecoded = decodeJWT(vcJwt);
       
       setConditions((previousCondition) => {
         let newCondition = [...previousCondition];
-        newCondition[0].valid = result;
+        newCondition[0].valid = result && (vcPayload.sub === vpPayload.iss);
         return newCondition;
       });
     }
 
-    async function verifyChallengeAndDomain() {
-      const { payload, header, signature, data } = decodeJWT(jwt);
+    async function verifyChallenge() {
+      const { payload } = decodeJWT(jwt);
+      const result = (payload.nonce === challenge)
+      setConditions((previousCondition) => {
+        let newCondition = [...previousCondition];
+        newCondition[1].valid = result;
+        return newCondition;
+      });
     }
 
     if (jwt) {
       verifySignature();
-      verifyChallengeAndDomain();
+      verifyChallenge();
     }
   }, [jwt]);
 
@@ -89,6 +97,9 @@ export const CheckPresentationStep: FC<JobDetailsStepProps> = (props) => {
           endIcon={(<ArrowRightIcon fontSize="small" />)}
           onClick={onNext}
           variant="contained"
+          disabled={
+            conditions.some(condition => !condition.valid)
+          }
         >
           Continue
         </Button>
@@ -107,6 +118,6 @@ CheckPresentationStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func,
   jwt: PropTypes.string.isRequired,
-  domain: PropTypes.string.isRequired,
+  // domain: PropTypes.string.isRequired,
   challenge: PropTypes.string.isRequired,
 };
