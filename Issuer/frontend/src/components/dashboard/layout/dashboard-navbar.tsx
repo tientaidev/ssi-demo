@@ -1,21 +1,22 @@
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar,
   Box,
   IconButton,
   Toolbar,
-  Button
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import type { AppBarProps } from '@mui/material';
+import { AppBarProps, Typography } from '@mui/material';
 import { Menu as MenuIcon } from '../../../icons/menu';
 import {
   LightMode as LightModeIcon,
   DarkMode as DarkModeIcon
 } from '@mui/icons-material';
-import type { Settings } from '../../../contexts/settings-context';
 import { useSettings } from '../../../hooks/use-settings';
+import { metaMask, hooks } from '../../../connectors/metaMask';
+import { ConnectButton } from '../../misc/connect-button';
+const { useChainId, useIsActivating, useIsActive } = hooks
 
 interface DashboardNavbarProps extends AppBarProps {
   onOpenSidebar?: () => void;
@@ -40,21 +41,12 @@ const DashboardNavbarRoot = styled(AppBar)(
   })
 );
 
-const ConnectButton = () => {
-  return (
-    <Button variant='contained'>
-      Connect Wallet
-    </Button>
-  )
-}
-
-const getValues = (settings: Settings) => ({
-  theme: settings.theme
-});
-
 export const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
   const { onOpenSidebar, ...other } = props;
   const { settings, saveSettings } = useSettings();
+  const chainId = useChainId();
+  const isActivating = useIsActivating();
+  const isActive = useIsActive();
 
   const changeTheme = () => {
     if (settings.theme === 'dark') {
@@ -63,6 +55,12 @@ export const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
       saveSettings({ theme: 'dark' })
     }
   }
+
+  useEffect(() => {
+    void metaMask.connectEagerly().catch(() => {
+      console.log('Failed to connect eagerly to metamask')
+    })
+  }, [])
 
   return (
     <>
@@ -96,6 +94,9 @@ export const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
           >
             <MenuIcon fontSize="small" />
           </IconButton>
+          <Typography variant="h5">
+            Issuer dashboard
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <IconButton
             onClick={changeTheme}
@@ -105,7 +106,11 @@ export const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
               settings.theme === 'dark' ? <LightModeIcon /> : <DarkModeIcon />
             }
           </IconButton>
-          <ConnectButton />
+          <ConnectButton
+            chainId={chainId}
+            isActivating={isActivating}
+            isActive={isActive}
+          />
         </Toolbar>
       </DashboardNavbarRoot>
     </>

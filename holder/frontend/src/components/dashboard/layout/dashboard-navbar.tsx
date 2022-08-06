@@ -8,7 +8,7 @@ import {
   Button
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import type { AppBarProps } from '@mui/material';
+import { AppBarProps, Typography } from '@mui/material';
 import { Menu as MenuIcon } from '../../../icons/menu';
 import {
   LightMode as LightModeIcon,
@@ -96,6 +96,9 @@ export const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
           >
             <MenuIcon fontSize="small" />
           </IconButton>
+          <Typography variant="h5" sx={{color: '#292929'}}>
+            Holder dashboard
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <IconButton
             onClick={changeTheme}

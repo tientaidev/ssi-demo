@@ -1,12 +1,11 @@
 import type {
   IIdentifier,
   VerifiableCredential,
-  IDataStoreSaveVerifiableCredentialArgs,
+  UniqueVerifiableCredential,
 } from "@veramo/core";
-import type { UniqueVerifiableCredential } from "@veramo/data-store";
 import type { ICreateVerifiableCredentialArgs } from "@veramo/credential-w3c";
-import { CredentialPayload, JwtCredentialPayload, normalizeCredential } from "did-jwt-vc";
 import type { JWTHeader, JWTPayload } from "did-jwt";
+import { CredentialPayload, JwtCredentialPayload, normalizeCredential } from "did-jwt-vc";
 import { agent } from "../agent/setup";
 import { VeramoDatabase } from "../db/db";
 import { encodeBase64url } from "../util";
@@ -27,12 +26,14 @@ router.get("/", async (_, res, next) => {
 
     let mappings = new Map<string, string>();
     identifiers.forEach((identifier) =>
-      mappings.set(identifier.did, identifier.alias || "")
+      mappings.set(identifier.did, identifier.alias as string)
     );
 
     credentials.map((credential) => {
       let issuer = credential.verifiableCredential.issuer;
-      issuer.alias = mappings.get(issuer.id);
+      if (typeof issuer == 'object') {
+        issuer.alias = mappings.get(issuer.id);
+      }
       return credential;
     });
 
@@ -49,11 +50,11 @@ router.get("/:hash", async (req, res, next) => {
         hash: req.params.hash,
       });
 
-    credential.issuer.alias = await agent
-      .didManagerGet({
-        did: credential.issuer.id,
-      })
-      .then((did) => did.alias);
+    // credential.issuer.alias = await agent
+    //   .didManagerGet({
+    //     did: credential.issuer.id,
+    //   })
+    //   .then((did) => did.alias);
 
     res.send(credential);
   } catch (err) {

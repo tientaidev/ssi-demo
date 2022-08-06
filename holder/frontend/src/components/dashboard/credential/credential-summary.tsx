@@ -96,13 +96,13 @@ export const CredentialSummary: FC<CredentialDetailsProps> = (props) => {
           <PropertyListItem
             align={align}
             label="Issuer did"
-            value={truncate(credential.issuer.id)}
+            value={typeof credential.issuer == 'object' ? truncate(credential.issuer.id) : ''}
           />
           <Divider />
           <PropertyListItem
             align={align}
             label="Alias"
-            value={credential.issuer.alias}
+            value={typeof credential.issuer == 'object' ? credential.issuer.alias : ''}
           />
           <Divider />
         </PropertyList>

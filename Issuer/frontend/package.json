@@ -24,7 +24,9 @@
     "react-dom": "18.1.0",
     "react-hot-toast": "^2.2.0",
     "simplebar-react": "^2.4.1",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@web3-react/metamask": "8.0.26-beta.0",
+    "@web3-react/core": "8.0.33-beta.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.2.1",

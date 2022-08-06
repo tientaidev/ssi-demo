@@ -22,18 +22,10 @@ export const CheckCredentialsStep: FC<JobDescriptionStepProps> = (props) => {
 
   const conditions = [
     {
-      text: 'OOP: Valid certificate and passed',
-      valid: true
-    },
-    {
-      text: 'Calculus 1: Valid certificate and passed',
+      text: 'Query from blockchain: PPL certificate valid and passed',
       valid: true
     }
   ]
-
-  const handleChange = (value: string): void => {
-    setContent(value);
-  };
 
   return (
     <div {...other}>

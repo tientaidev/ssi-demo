@@ -33,7 +33,7 @@ const getSections = (): Section[] => [
     title: 'General',
     items: [
       {
-        title: 'Overview',
+        title: 'Issuer',
         path: '/dashboard',
         icon: <HomeIcon fontSize="small" />
       }

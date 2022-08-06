@@ -7,6 +7,7 @@ import {
   IDIDManager,
   IResolver,
   IDataStore,
+  IDataStoreORM,
   IKeyManager,
   IMessageHandler,
 } from "@veramo/core";
@@ -33,7 +34,6 @@ import {
   Entities,
   KeyStore,
   DIDStore,
-  IDataStoreORM,
   DataStoreORM,
   PrivateKeyStore,
   DataStore,

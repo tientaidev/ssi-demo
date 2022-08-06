@@ -5,46 +5,50 @@ import type {
   IKey,
 } from "@veramo/core";
 import { VerificationMethod } from "did-resolver";
-import express from "express";
-import { EthrDID } from "ethr-did";
 import { agent } from "../agent/setup";
+import express from "express";
 
 const router = express.Router();
 
-router.get("/", async (_, res) => {
-  const identifiers = await agent.didManagerFind();
-  res.send(identifiers);
+router.get("/", async (_, res, next) => {
+  try {
+    const identifiers = await agent.didManagerFind();
+    res.send(identifiers);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.get("/:did", async (req, res) => {
-  const identifier: IIdentifier = await agent.didManagerGet({
-    did: req.params.did,
-  });
+router.get("/:did", async (req, res, next) => {
+  try {
+    const identifier: IIdentifier = await agent.didManagerGet({ did: req.params.did });
+    const internalKids = new Set(identifier.keys.map((key) => key.kid));
+    
+    const resolutionResult: DIDResolutionResult = await agent.resolveDid({ didUrl: req.params.did });
+    const verificationMethods = resolutionResult.didDocument?.verificationMethod as VerificationMethod[];
+    const filteredVerificationMethods = verificationMethods.filter(method => {
+      const regex = /^delegate-\d+$/;
+      return method.id.split("#").pop()?.match(regex) 
+    });
+    const pubKeyList = filteredVerificationMethods.map(
+      (method) => method.publicKeyHex
+    ) as string[];
 
-  const internalKeys = identifier.keys.map((key) => key.kid);
+    pubKeyList.forEach((pubKey) => {
+      if (!internalKids.has(pubKey)) {
+        identifier.keys.push({
+          kid: pubKey,
+          kms: "external",
+          publicKeyHex: pubKey,
+          type: "Secp256k1",
+        });
+      }
+    });
 
-  const resolutionResult: DIDResolutionResult = await agent.resolveDid({
-    didUrl: req.params.did,
-  });
-
-  const verificationMethods = resolutionResult.didDocument
-    ?.verificationMethod as VerificationMethod[];
-  const filteredVerificationMethods = verificationMethods.slice(2);
-  const pubKeyList = filteredVerificationMethods.map(
-    (method) => method.publicKeyHex
-  ) as string[];
-  pubKeyList.forEach((pubKey) => {
-    if (!internalKeys.includes(pubKey)) {
-      identifier.keys.push({
-        kid: pubKey,
-        kms: "external",
-        publicKeyHex: pubKey,
-        type: "Secp256k1",
-      });
-    }
-  });
-
-  res.send(identifier);
+    res.send(identifier);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post("/", async (req, res, next) => {

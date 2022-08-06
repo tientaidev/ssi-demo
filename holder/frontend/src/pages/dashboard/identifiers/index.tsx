@@ -73,13 +73,15 @@ const IdentifierList: NextPage = () => {
   };
 
   const handleDeleteIdentifier = async (did: string) => {
-    try {
-      await fetch(`http://localhost:5001/dids/${did}`, { method: 'DELETE' });
-      toast.success('Identifier deleted!');
-    } catch(error) {
-      toast.error((error as Error).message)
-    }
+    const response: Response = await fetch(`http://localhost:5001/dids/${did}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
     
+    if (response.status === 200) toast.success('Identifier deleted!');
+    else toast.error(response.statusText)
     handleCloseDrawer();
     getIdentifiers();
   }

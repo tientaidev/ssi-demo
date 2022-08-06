@@ -4,14 +4,14 @@ import { ThemeOptions } from '@mui/material';
 
 const neutral = {
   100: '#F3F4F6',
-  200: '#E5E7EB',
+  200: '#E5EBE5',
   300: '#D1D5DB',
   400: '#9CA3AF',
   500: '#6B7280',
   600: '#4B5563',
   700: '#374151',
   800: '#1F2937',
-  900: '#111827'
+  900: '#112714'
 };
 
 const background = {
@@ -22,10 +22,10 @@ const background = {
 const divider = '#E6E8F0';
 
 const primary = {
-  main: '#5048E5',
+  main: '#77e548',
   light: '#828DF8',
-  dark: '#3832A0',
-  contrastText: '#FFFFFF'
+  dark: '#32a041',
+  contrastText: '#292929'
 };
 
 const secondary = {
